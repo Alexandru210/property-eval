@@ -1,1 +1,70 @@
-<p>login works!</p>
+<section class="auth-page" aria-labelledby="login-title">
+  <div class="auth-panel">
+    <div class="auth-copy">
+      <p class="eyebrow">Property Eval</p>
+      <h1 id="login-title">Welcome back</h1>
+      <p class="intro">
+        Sign in to continue tracking properties, reviewing evaluations, and preparing smarter listing decisions.
+      </p>
+    </div>
+
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="submit()" novalidate>
+      @if (submitError()) {
+        <div class="alert alert-danger" role="alert">
+          {{ submitError() }}
+        </div>
+      }
+
+      <div class="form-field">
+        <label for="email">Email address</label>
+        <input
+          id="email"
+          class="form-control"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          aria-describedby="email-error"
+          [class.is-invalid]="hasError('email', 'required') || hasError('email', 'email')"
+        />
+        <p id="email-error" class="field-message invalid-feedback" aria-live="polite">
+          @if (hasError('email', 'required')) {
+            Enter your email address.
+          } @else if (hasError('email', 'email')) {
+            Enter a valid email address.
+          }
+        </p>
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          class="form-control"
+          type="password"
+          formControlName="password"
+          autocomplete="current-password"
+          aria-describedby="password-error"
+          [class.is-invalid]="hasError('password', 'required')"
+        />
+        <p id="password-error" class="field-message invalid-feedback" aria-live="polite">
+          @if (hasError('password', 'required')) {
+            Enter your password.
+          }
+        </p>
+      </div>
+
+      <button class="btn btn-primary login-submit" type="submit" [disabled]="isSubmitting()">
+        @if (isSubmitting()) {
+          Signing in...
+        } @else {
+          Sign in
+        }
+      </button>
+
+      <p class="auth-switch">
+        Need an account?
+        <a routerLink="/register">Create one</a>
+      </p>
+    </form>
+  </div>
+</section>
