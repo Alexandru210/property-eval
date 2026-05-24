@@ -37,7 +37,8 @@ describe('Register', () => {
 
   it('should submit a valid registration request', async () => {
     component['registerForm'].setValue({
-      name: 'Alex Morgan',
+      firstName: 'Alex',
+      lastName: 'Morgan',
       email: 'alex@example.com',
       password: 'password123',
       confirmPassword: 'password123',
@@ -46,7 +47,8 @@ describe('Register', () => {
     await component['submit']();
 
     expect(authService.register).toHaveBeenCalledWith({
-      name: 'Alex Morgan',
+      firstName: 'Alex',
+      lastName: 'Morgan',
       email: 'alex@example.com',
       password: 'password123',
     });

@@ -16,26 +16,46 @@
         </div>
       }
 
-      <div class="form-field">
-        <label for="name">Full name</label>
-        <input
-          id="name"
-          class="form-control"
-          type="text"
-          formControlName="name"
-          autocomplete="name"
-          aria-describedby="name-error"
-          [class.is-invalid]="hasError('name', 'required') || hasError('name', 'minlength') || hasError('name', 'maxlength')"
-        />
-        <p id="name-error" class="field-message invalid-feedback" aria-live="polite">
-          @if (hasError('name', 'required')) {
-            Enter your full name.
-          } @else if (hasError('name', 'minlength')) {
-            Name must be at least 3 characters.
-          } @else if (hasError('name', 'maxlength')) {
-            Name must be 80 characters or fewer.
-          }
-        </p>
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="firstName">First name</label>
+          <input
+            id="firstName"
+            class="form-control"
+            type="text"
+            formControlName="firstName"
+            autocomplete="given-name"
+            aria-describedby="first-name-error"
+            [class.is-invalid]="hasError('firstName', 'required') || hasError('firstName', 'maxlength')"
+          />
+          <p id="first-name-error" class="field-message invalid-feedback" aria-live="polite">
+            @if (hasError('firstName', 'required')) {
+              Enter your first name.
+            } @else if (hasError('firstName', 'maxlength')) {
+              First name must be 40 characters or fewer.
+            }
+          </p>
+        </div>
+
+        <div class="form-field">
+          <label for="lastName">Last name</label>
+          <input
+            id="lastName"
+            class="form-control"
+            type="text"
+            formControlName="lastName"
+            autocomplete="family-name"
+            aria-describedby="last-name-error"
+            [class.is-invalid]="hasError('lastName', 'required') || hasError('lastName', 'maxlength')"
+          />
+          <p id="last-name-error" class="field-message invalid-feedback" aria-live="polite">
+            @if (hasError('lastName', 'required')) {
+              Enter your last name.
+            } @else if (hasError('lastName', 'maxlength')) {
+              Last name must be 40 characters or fewer.
+            }
+          </p>
+        </div>
       </div>
 
       <div class="form-field">

@@ -27,7 +27,8 @@ export class Register {
 
   protected readonly registerForm = this.fb.group(
     {
-      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(80)]],
+      firstName: ['', [Validators.required, Validators.maxLength(40)]],
+      lastName: ['', [Validators.required, Validators.maxLength(40)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
@@ -43,12 +44,13 @@ export class Register {
       return;
     }
 
-    const { name, email, password } = this.registerForm.getRawValue();
+    const { firstName, lastName, email, password } = this.registerForm.getRawValue();
     this.isSubmitting.set(true);
 
     try {
       await this.authService.register({
-        name: name.trim(),
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
         email: email.trim(),
         password,
       });
@@ -60,7 +62,10 @@ export class Register {
     }
   }
 
-  protected hasError(controlName: 'name' | 'email' | 'password' | 'confirmPassword', errorName: string): boolean {
+  protected hasError(
+    controlName: 'firstName' | 'lastName' | 'email' | 'password' | 'confirmPassword',
+    errorName: string,
+  ): boolean {
     const control = this.registerForm.controls[controlName];
     return control.hasError(errorName) && (control.dirty || control.touched);
   }

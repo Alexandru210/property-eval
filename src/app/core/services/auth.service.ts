@@ -2,10 +2,11 @@ import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { User, AuthResponse, LoginRequest, RegisterRequest } from '../models/user.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:5001/api/auth';
+  private readonly apiUrl = environment.apiUrl;
   private readonly tokenKey = 'auth_token';
 
   private currentUserSignal = signal<User | null>(this.loadUserFromStorage());
@@ -64,10 +65,9 @@ export class AuthService {
   async register(request: RegisterRequest): Promise<void> {
     this.isLoadingSignal.set(true);
     try {
-      const response = await firstValueFrom(
-        this.http.post<AuthResponse>(`${this.apiUrl}/register`, request)
+      await firstValueFrom(
+        this.http.post<void>(`${this.apiUrl}/users`, request)
       );
-      this.setAuthData(response);
     } catch (error) {
       this.currentUserSignal.set(null);
       throw error;
