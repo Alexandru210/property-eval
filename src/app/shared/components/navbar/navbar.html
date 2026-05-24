@@ -1,1 +1,30 @@
-<p>navbar works!</p>
+<nav class="navbar-custom sticky-top" role="navigation" aria-label="Main navigation">
+  <div class="navbar-container">
+    <div class="navbar-section navbar-left" aria-label="Property actions">
+      <a class="navbar-link" routerLink="/buy" routerLinkActive="active" (click)="closeMenu()">
+        Buy
+      </a>
+      <a class="navbar-link" routerLink="/sell" routerLinkActive="active" (click)="closeMenu()">
+        Sell
+      </a>
+      <a class="navbar-link" routerLink="/evaluate" routerLinkActive="active" (click)="closeMenu()">
+        Evaluate
+      </a>
+    </div>
+
+    <div class="navbar-section navbar-center">
+      <a class="navbar-logo fw-bold" routerLink="/" (click)="closeMenu()" aria-label="Property Eval Home">
+        Property Eval
+      </a>
+    </div>
+
+    <div class="navbar-section navbar-right" aria-label="Account actions">
+      <a class="navbar-link" routerLink="/login" routerLinkActive="active" (click)="closeMenu()">
+        Sign In
+      </a>
+      <a class="navbar-link navbar-link-strong" routerLink="/register" routerLinkActive="active" (click)="closeMenu()">
+        Register
+      </a>
+    </div>
+  </div>
+</nav>
