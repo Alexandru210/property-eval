@@ -19,12 +19,26 @@
     </div>
 
     <div class="navbar-section navbar-right" aria-label="Account actions">
-      <a class="navbar-link" routerLink="/login" routerLinkActive="active" (click)="closeMenu()">
-        Sign In
-      </a>
-      <a class="navbar-link navbar-link-strong" routerLink="/register" routerLinkActive="active" (click)="closeMenu()">
-        Register
-      </a>
+      @if (isAuthenticated()) {
+        <details class="account-menu">
+          <summary class="navbar-link account-menu-trigger">
+            <span class="account-name">{{ currentUser()?.name }}</span>
+            <span class="account-chevron" aria-hidden="true">&#9662;</span>
+          </summary>
+          <div class="account-menu-panel">
+            <button class="account-menu-item" type="button" (click)="logout()">
+              Logout
+            </button>
+          </div>
+        </details>
+      } @else {
+        <a class="navbar-link" routerLink="/login" routerLinkActive="active" (click)="closeMenu()">
+          Sign In
+        </a>
+        <a class="navbar-link navbar-link-strong" routerLink="/register" routerLinkActive="active" (click)="closeMenu()">
+          Register
+        </a>
+      }
     </div>
   </div>
 </nav>

@@ -1,14 +1,18 @@
 export interface User {
-  id: string;
+  id: number;
   email: string;
+  firstName: string;
+  lastName: string;
   name: string;
   role: 'user' | 'admin';
-  createdAt: Date;
 }
 
 export interface AuthResponse {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
   token: string;
-  user: User;
 }
 
 export interface LoginRequest {

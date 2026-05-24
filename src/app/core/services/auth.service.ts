@@ -65,9 +65,10 @@ export class AuthService {
   async register(request: RegisterRequest): Promise<void> {
     this.isLoadingSignal.set(true);
     try {
-      await firstValueFrom(
-        this.http.post<void>(`${this.apiUrl}/users`, request)
+      const response = await firstValueFrom(
+        this.http.post<AuthResponse>(`${this.apiUrl}/users`, request)
       );
+      this.setAuthData(response);
     } catch (error) {
       this.currentUserSignal.set(null);
       throw error;
@@ -96,8 +97,21 @@ export class AuthService {
    * Set auth data (token + user) and store in localStorage
    */
   private setAuthData(response: AuthResponse): void {
+    const user = this.mapAuthResponseToUser(response);
+
     localStorage.setItem(this.tokenKey, response.token);
-    localStorage.setItem('currentUser', JSON.stringify(response.user));
-    this.currentUserSignal.set(response.user);
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSignal.set(user);
+  }
+
+  private mapAuthResponseToUser(response: AuthResponse): User {
+    return {
+      id: response.id,
+      email: response.email,
+      firstName: response.firstName,
+      lastName: response.lastName,
+      name: `${response.firstName} ${response.lastName}`.trim(),
+      role: 'user',
+    };
   }
 }
