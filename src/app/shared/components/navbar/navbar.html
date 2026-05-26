@@ -20,12 +20,22 @@
 
     <div class="navbar-section navbar-right" aria-label="Account actions">
       @if (isAuthenticated()) {
-        <details class="account-menu">
-          <summary class="navbar-link account-menu-trigger">
+        <details #accountMenu class="account-menu">
+          <summary class="navbar-link account-menu-trigger" aria-label="Account menu">
             <span class="account-name">{{ currentUser()?.name }}</span>
             <span class="account-chevron" aria-hidden="true">&#9662;</span>
           </summary>
           <div class="account-menu-panel">
+            <a class="account-menu-item account-menu-link" routerLink="/my-listings" routerLinkActive="active" (click)="accountMenu.open = false; closeMenu()">
+              My Listings
+            </a>
+            <a class="account-menu-item account-menu-link" routerLink="/saved-properties" routerLinkActive="active" (click)="accountMenu.open = false; closeMenu()">
+              Saved Properties
+            </a>
+            <a class="account-menu-item account-menu-link" routerLink="/my-evaluations" routerLinkActive="active" (click)="accountMenu.open = false; closeMenu()">
+              My Evaluations
+            </a>
+            <div class="account-menu-divider" role="separator" aria-hidden="true"></div>
             <button class="account-menu-item" type="button" (click)="logout()">
               Logout
             </button>

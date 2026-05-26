@@ -60,10 +60,16 @@ describe('Navbar', () => {
     const text = compiled.textContent ?? '';
 
     expect(text).toContain('Alex Morgan');
+    expect(text).toContain('My Listings');
+    expect(text).toContain('Saved Properties');
+    expect(text).toContain('My Evaluations');
     expect(text).toContain('Logout');
     expect(text).not.toContain('Sign In');
     expect(text).not.toContain('Register');
     expect(compiled.querySelector('.account-menu')).not.toBeNull();
+    expect(compiled.querySelector('a[routerLink="/my-listings"]')).not.toBeNull();
+    expect(compiled.querySelector('a[routerLink="/saved-properties"]')).not.toBeNull();
+    expect(compiled.querySelector('a[routerLink="/my-evaluations"]')).not.toBeNull();
 
     compiled.querySelector<HTMLButtonElement>('button.account-menu-item')?.click();
 
