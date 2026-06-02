@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { User, AuthResponse, LoginRequest, RegisterRequest } from '../models/user.model';
+import { User, AuthResponse, LoginRequest, RegisterRequest, UserRole } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -38,7 +38,17 @@ export class AuthService {
    */
   private loadUserFromStorage(): User | null {
     const storedUser = localStorage.getItem('currentUser');
-    return storedUser ? JSON.parse(storedUser) : null;
+
+    if (!storedUser) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(storedUser) as User;
+    } catch {
+      localStorage.removeItem('currentUser');
+      return null;
+    }
   }
 
   /**
@@ -48,7 +58,7 @@ export class AuthService {
     this.isLoadingSignal.set(true);
     try {
       const response = await firstValueFrom(
-        this.http.post<AuthResponse>(`${this.apiUrl}/login`, request)
+        this.http.post<AuthResponse>(`${this.apiUrl}/users/login`, request)
       );
       this.setAuthData(response);
     } catch (error) {
@@ -111,7 +121,12 @@ export class AuthService {
       firstName: response.firstName,
       lastName: response.lastName,
       name: `${response.firstName} ${response.lastName}`.trim(),
-      role: 'user',
+      role: this.mapBackendRole(response.role),
+      backendRole: response.role,
     };
+  }
+
+  private mapBackendRole(role: string | undefined): UserRole {
+    return role?.toLowerCase() === 'admin' ? 'admin' : 'user';
   }
 }
