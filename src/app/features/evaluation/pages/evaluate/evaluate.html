@@ -1,0 +1,148 @@
+<section class="evaluation-page" aria-labelledby="evaluate-title">
+  <div class="evaluation-shell">
+    <header class="evaluation-header">
+      <div>
+        <p class="page-kicker">Valuation workspace</p>
+        <h1 id="evaluate-title">Request an Evaluation</h1>
+        <p class="intro">Capture property facts and create a valuation record for review and follow-up.</p>
+      </div>
+      <a class="btn btn-outline-primary" routerLink="/my-evaluations">My evaluations</a>
+    </header>
+
+    <div class="evaluation-layout">
+      <aside class="process-panel" aria-label="Evaluation summary">
+        <img src="/assets/property-marketplace-hero.webp" alt="" />
+        <div>
+          <p class="page-kicker">Review queue</p>
+          <h2>Evaluation request</h2>
+          <p>Submit the property facts so an evaluator can review the request and record a value.</p>
+        </div>
+      </aside>
+
+      <form class="evaluation-panel" [formGroup]="evaluationForm" (ngSubmit)="submit()" novalidate>
+      @if (submitError()) {
+        <div class="alert alert-danger" role="alert">
+          {{ submitError() }}
+          @if (pendingPropertyId() !== null) {
+            <span class="retry-note">Saved property details are ready for retry.</span>
+          }
+        </div>
+      }
+
+      @if (createdEvaluation(); as evaluation) {
+        <div class="alert alert-success" role="status">
+          Evaluation request #{{ evaluation.id }} was created for
+          {{ evaluation.property.address.city }}.
+        </div>
+      }
+
+      @if (propertyValuation(); as valuation) {
+        <section class="valuation-result" aria-labelledby="valuation-result-title" aria-live="polite">
+          <div>
+            <p class="page-kicker">Instant estimate</p>
+            <h2 id="valuation-result-title">
+              {{ valuation.predictedValue | currency: 'EUR' : 'symbol' : '1.0-0' }}
+            </h2>
+            <p>
+              Estimated range:
+              {{ valuation.predictionLowerBound | currency: 'EUR' : 'symbol' : '1.0-0' }}
+              -
+              {{ valuation.predictionUpperBound | currency: 'EUR' : 'symbol' : '1.0-0' }}
+            </p>
+          </div>
+          <dl>
+            <div>
+              <dt>Model</dt>
+              <dd>{{ valuation.modelName }}</dd>
+            </div>
+            <div>
+              <dt>Training rows</dt>
+              <dd>{{ valuation.trainingRowCount }}</dd>
+            </div>
+          </dl>
+        </section>
+      } @else if (valuationError()) {
+        <div class="alert alert-warning" role="status">
+          {{ valuationError() }}
+        </div>
+      }
+
+      <section aria-labelledby="evaluation-property-title">
+        <h2 id="evaluation-property-title">Property</h2>
+        <div class="form-grid">
+          <label>
+            <span>Street address</span>
+            <input class="form-control" type="text" formControlName="street" [class.is-invalid]="hasError('street', 'required')" />
+          </label>
+
+          <label>
+            <span>City</span>
+            <input class="form-control" type="text" formControlName="city" [class.is-invalid]="hasError('city', 'required')" />
+          </label>
+
+          <label>
+            <span>County</span>
+            <input class="form-control" type="text" formControlName="county" [class.is-invalid]="hasError('county', 'required')" />
+          </label>
+
+          <label>
+            <span>Property type</span>
+            <select class="form-select" formControlName="propertyType">
+              @for (type of propertyTypes; track type.value) {
+                <option [ngValue]="type.value">{{ type.label }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            <span>Area</span>
+            <input class="form-control" type="number" min="1" formControlName="area" [class.is-invalid]="hasError('area', 'min')" />
+          </label>
+
+          <label>
+            <span>Bedrooms</span>
+            <input class="form-control" type="number" min="0" formControlName="bedrooms" [class.is-invalid]="hasError('bedrooms', 'min')" />
+          </label>
+
+          <label>
+            <span>Bathrooms</span>
+            <input class="form-control" type="number" min="0" formControlName="bathrooms" [class.is-invalid]="hasError('bathrooms', 'min')" />
+          </label>
+
+          <label>
+            <span>Year built</span>
+            <input class="form-control" type="number" min="1800" max="2027" formControlName="yearBuilt" [class.is-invalid]="hasError('yearBuilt', 'min') || hasError('yearBuilt', 'max')" />
+          </label>
+        </div>
+
+        <label class="full-field">
+          <span>Description</span>
+          <textarea class="form-control" rows="5" formControlName="description" [class.is-invalid]="hasError('description', 'required') || hasError('description', 'maxlength')"></textarea>
+        </label>
+      </section>
+
+      <section aria-labelledby="evaluation-notes-title">
+        <h2 id="evaluation-notes-title">Evaluation request</h2>
+        <div class="form-grid request-grid">
+          <label class="wide-field">
+            <span>Notes</span>
+            <textarea class="form-control" rows="4" formControlName="notes" [class.is-invalid]="hasError('notes', 'maxlength')"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit" [disabled]="isSubmitting()">
+          @if (isSubmitting()) {
+            Creating request...
+          } @else if (pendingPropertyId() !== null) {
+            Retry evaluation request
+          } @else {
+            Create evaluation request
+          }
+        </button>
+      </div>
+      </form>
+    </div>
+  </div>
+</section>
