@@ -27,9 +27,8 @@ export class AuthService {
    */
   private initializeAuth(): void {
     const token = this.getToken();
-    if (token) {
-      // Token exists, but user might be stale. In real app, validate with backend.
-      // For MVP, assume token is valid if present.
+    if (!token) {
+      this.currentUserSignal.set(null);
     }
   }
 
@@ -37,6 +36,13 @@ export class AuthService {
    * Load user from localStorage if exists
    */
   private loadUserFromStorage(): User | null {
+    const token = localStorage.getItem(this.tokenKey);
+
+    if (!token || this.isTokenExpired(token)) {
+      this.clearStoredAuthData();
+      return null;
+    }
+
     const storedUser = localStorage.getItem('currentUser');
 
     if (!storedUser) {
@@ -92,15 +98,21 @@ export class AuthService {
    */
   logout(): void {
     this.currentUserSignal.set(null);
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem('currentUser');
+    this.clearStoredAuthData();
   }
 
   /**
    * Get current auth token
    */
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    const token = localStorage.getItem(this.tokenKey);
+
+    if (!token || this.isTokenExpired(token)) {
+      this.logout();
+      return null;
+    }
+
+    return token;
   }
 
   /**
@@ -128,5 +140,33 @@ export class AuthService {
 
   private mapBackendRole(role: string | undefined): UserRole {
     return role?.toLowerCase() === 'admin' ? 'admin' : 'user';
+  }
+
+  private clearStoredAuthData(): void {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem('currentUser');
+  }
+
+  private isTokenExpired(token: string): boolean {
+    const payload = token.split('.')[1];
+
+    if (!payload) {
+      return true;
+    }
+
+    try {
+      const decodedPayload = JSON.parse(atob(this.toBase64(payload))) as { exp?: number };
+
+      return typeof decodedPayload.exp !== 'number' || Date.now() >= decodedPayload.exp * 1000;
+    } catch {
+      return true;
+    }
+  }
+
+  private toBase64(base64Url: string): string {
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const padding = '='.repeat((4 - (base64.length % 4)) % 4);
+
+    return base64 + padding;
   }
 }

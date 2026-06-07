@@ -1,10 +1,13 @@
+export type UserRole = 'user' | 'admin';
+
 export interface User {
   id: number;
   email: string;
   firstName: string;
   lastName: string;
   name: string;
-  role: 'user' | 'admin';
+  role: UserRole;
+  backendRole?: string;
 }
 
 export interface AuthResponse {
@@ -12,6 +15,7 @@ export interface AuthResponse {
   firstName: string;
   lastName: string;
   email: string;
+  role: string;
   token: string;
 }
 
