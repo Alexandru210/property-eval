@@ -1,0 +1,169 @@
+.form-page {
+  min-height: calc(100vh - 12rem);
+  padding: 2rem 1rem 3rem;
+  background: #f8fafc;
+}
+
+.form-shell {
+  width: min(100%, 70rem);
+  margin: 0 auto;
+}
+
+.form-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+h1 {
+  margin: 0.25rem 0 0;
+  color: #101828;
+  font-size: 2.25rem;
+  line-height: 1.1;
+}
+
+.intro {
+  margin: 0.75rem 0 0;
+  color: #667085;
+  line-height: 1.6;
+}
+
+.form-layout {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.36fr) minmax(0, 0.64fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.process-panel,
+.form-panel {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.process-panel {
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  div {
+    padding: 1rem;
+  }
+
+  h2 {
+    margin: 0.45rem 0 0;
+  }
+
+  p:not(.page-kicker) {
+    margin: 0.6rem 0 0;
+    color: #667085;
+    line-height: 1.55;
+  }
+}
+
+.form-panel {
+  padding: 1.25rem;
+}
+
+section + section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+h2 {
+  margin: 0 0 1rem;
+  color: #101828;
+  font-size: 1.2rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+label {
+  min-width: 0;
+}
+
+label span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #344054;
+  font-weight: 700;
+}
+
+.wide-field {
+  grid-column: span 2;
+}
+
+.full-field {
+  display: block;
+  margin-top: 1rem;
+}
+
+.form-control,
+.form-select {
+  min-height: 2.8rem;
+  border-color: #d0d5dd;
+
+  &:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.16);
+  }
+}
+
+textarea.form-control {
+  min-height: 9rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.retry-note {
+  display: block;
+  margin-top: 0.35rem;
+  font-weight: 700;
+}
+
+@media (max-width: 991.98px) {
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .form-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .form-header,
+  .form-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wide-field {
+    grid-column: auto;
+  }
+}

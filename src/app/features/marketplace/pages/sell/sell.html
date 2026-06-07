@@ -1,0 +1,132 @@
+<section class="form-page" aria-labelledby="sell-title">
+  <div class="form-shell">
+    <header class="form-header">
+      <div>
+        <p class="page-kicker">Seller workspace</p>
+        <h1 id="sell-title">List a Property</h1>
+        <p class="intro">Publish a clean listing with the property facts buyers need to compare opportunities.</p>
+      </div>
+      <a class="btn btn-outline-primary" routerLink="/my-listings">My listings</a>
+    </header>
+
+    <div class="form-layout">
+      <aside class="process-panel" aria-label="Listing summary">
+        <img src="/assets/property-marketplace-hero.webp" alt="" />
+        <div>
+          <p class="page-kicker">Listing status</p>
+          <h2>Ready for marketplace review</h2>
+          <p>Draft the facts, choose a price, and keep the listing visible only when it is ready.</p>
+        </div>
+      </aside>
+
+      <form class="form-panel" [formGroup]="sellForm" (ngSubmit)="submit()" novalidate>
+      @if (submitError()) {
+        <div class="alert alert-danger" role="alert">
+          {{ submitError() }}
+          @if (pendingPropertyId() !== null) {
+            <span class="retry-note">Saved property details are ready for retry.</span>
+          }
+        </div>
+      }
+
+      @if (createdListing(); as listing) {
+        <div class="alert alert-success" role="status">
+          Listing created:
+          <a [routerLink]="['/listings', listing.id]">{{ listing.title }}</a>
+          at {{ listing.askingPrice | currency: 'EUR' : 'symbol' : '1.0-0' }}.
+        </div>
+      }
+
+      <section aria-labelledby="property-section-title">
+        <h2 id="property-section-title">Property details</h2>
+        <div class="form-grid">
+          <label>
+            <span>Street address</span>
+            <input class="form-control" type="text" formControlName="street" [class.is-invalid]="hasError('street', 'required')" />
+          </label>
+
+          <label>
+            <span>City</span>
+            <input class="form-control" type="text" formControlName="city" [class.is-invalid]="hasError('city', 'required')" />
+          </label>
+
+          <label>
+            <span>County</span>
+            <input class="form-control" type="text" formControlName="county" [class.is-invalid]="hasError('county', 'required')" />
+          </label>
+
+          <label>
+            <span>Property type</span>
+            <select class="form-select" formControlName="propertyType">
+              @for (type of propertyTypes; track type.value) {
+                <option [ngValue]="type.value">{{ type.label }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            <span>Area</span>
+            <input class="form-control" type="number" min="1" formControlName="area" [class.is-invalid]="hasError('area', 'min')" />
+          </label>
+
+          <label>
+            <span>Bedrooms</span>
+            <input class="form-control" type="number" min="0" formControlName="bedrooms" [class.is-invalid]="hasError('bedrooms', 'min')" />
+          </label>
+
+          <label>
+            <span>Bathrooms</span>
+            <input class="form-control" type="number" min="0" formControlName="bathrooms" [class.is-invalid]="hasError('bathrooms', 'min')" />
+          </label>
+
+          <label>
+            <span>Year built</span>
+            <input class="form-control" type="number" min="1800" max="2027" formControlName="yearBuilt" [class.is-invalid]="hasError('yearBuilt', 'min') || hasError('yearBuilt', 'max')" />
+          </label>
+        </div>
+
+        <label class="full-field">
+          <span>Description</span>
+          <textarea class="form-control" rows="5" formControlName="description" [class.is-invalid]="hasError('description', 'required') || hasError('description', 'maxlength')"></textarea>
+        </label>
+      </section>
+
+      <section aria-labelledby="listing-section-title">
+        <h2 id="listing-section-title">Listing</h2>
+        <div class="form-grid">
+          <label class="wide-field">
+            <span>Title</span>
+            <input class="form-control" type="text" formControlName="title" [class.is-invalid]="hasError('title', 'required') || hasError('title', 'maxlength')" />
+          </label>
+
+          <label>
+            <span>Asking price</span>
+            <input class="form-control" type="number" min="1" formControlName="askingPrice" [class.is-invalid]="hasError('askingPrice', 'min')" />
+          </label>
+
+          <label>
+            <span>Status</span>
+            <select class="form-select" formControlName="status">
+              @for (status of listingStatuses; track status.value) {
+                <option [ngValue]="status.value">{{ status.label }}</option>
+              }
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit" [disabled]="isSubmitting()">
+          @if (isSubmitting()) {
+            Creating listing...
+          } @else if (pendingPropertyId() !== null) {
+            Retry listing creation
+          } @else {
+            Create listing
+          }
+        </button>
+      </div>
+      </form>
+    </div>
+  </div>
+</section>

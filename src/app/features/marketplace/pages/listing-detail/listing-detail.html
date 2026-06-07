@@ -1,0 +1,97 @@
+<section class="detail-page" aria-labelledby="listing-title">
+  <div class="detail-shell">
+    <a class="back-link" routerLink="/buy">Back to listings</a>
+
+    @if (isLoading()) {
+      <section class="state-panel" aria-live="polite">
+        <h1 id="listing-title">Loading listing</h1>
+        <p>Preparing the property profile.</p>
+      </section>
+    } @else if (loadError()) {
+      <section class="state-panel error" aria-live="polite">
+        <h1 id="listing-title">Listing unavailable</h1>
+        <p>{{ loadError() }}</p>
+      </section>
+    } @else if (listing(); as listing) {
+      <div class="detail-grid">
+        <div class="media-panel">
+          <span>{{ getPropertyType(listing.property.propertyType) }}</span>
+        </div>
+
+        <article class="summary-panel">
+          <div class="summary-heading">
+            <div>
+              <p class="page-kicker">{{ getListingStatus(listing.status) }}</p>
+              <h1 id="listing-title">{{ listing.title }}</h1>
+              <p class="location">
+                {{ listing.property.address.street }},
+                {{ listing.property.address.city }},
+                {{ listing.property.address.county }}
+              </p>
+            </div>
+            <strong class="price">{{ listing.askingPrice | currency: 'EUR' : 'symbol' : '1.0-0' }}</strong>
+          </div>
+
+          <dl class="fact-grid">
+            <div>
+              <dt>Area</dt>
+              <dd>{{ listing.property.area }} m²</dd>
+            </div>
+            <div>
+              <dt>Bedrooms</dt>
+              <dd>{{ listing.property.bedrooms }}</dd>
+            </div>
+            <div>
+              <dt>Bathrooms</dt>
+              <dd>{{ listing.property.bathrooms }}</dd>
+            </div>
+            <div>
+              <dt>Built</dt>
+              <dd>{{ listing.property.yearBuilt }}</dd>
+            </div>
+            <div>
+              <dt>Price per m²</dt>
+              <dd>{{ getPricePerSquareMeter(listing) | currency: 'EUR' : 'symbol' : '1.0-0' }}</dd>
+            </div>
+            <div>
+              <dt>Listed</dt>
+              <dd>{{ listing.createdAt | date: 'mediumDate' }}</dd>
+            </div>
+          </dl>
+
+          <section class="description" aria-labelledby="description-title">
+            <h2 id="description-title">Description</h2>
+            <p>{{ listing.property.description }}</p>
+          </section>
+
+          <aside class="seller-panel" aria-labelledby="seller-title">
+            <div>
+              <h2 id="seller-title">Seller</h2>
+              <p>{{ listing.userFullName }}</p>
+            </div>
+            <div class="seller-actions">
+              @if (isAuthenticated()) {
+                <button class="btn btn-primary" type="button" (click)="toggleSaved(listing)">
+                  @if (isSaved()) {
+                    Remove saved
+                  } @else {
+                    Save property
+                  }
+                </button>
+                <a class="btn btn-outline-primary" routerLink="/saved-properties">Saved Properties</a>
+              } @else {
+                <a
+                  class="btn btn-primary"
+                  routerLink="/login"
+                  [queryParams]="{ returnUrl: '/listings/' + listing.id }"
+                >
+                  Sign in to save
+                </a>
+              }
+            </div>
+          </aside>
+        </article>
+      </div>
+    }
+  </div>
+</section>

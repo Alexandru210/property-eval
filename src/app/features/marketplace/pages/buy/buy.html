@@ -1,0 +1,127 @@
+<section class="market-page" aria-labelledby="buy-title">
+  <div class="market-shell">
+    <header class="market-header">
+      <div>
+        <p class="page-kicker">Marketplace</p>
+        <h1 id="buy-title">Available Properties</h1>
+        <p class="intro">Review active homes, compare core facts, and open listing profiles for a closer look.</p>
+      </div>
+      <a class="btn btn-primary" routerLink="/sell">List a property</a>
+    </header>
+
+    <form class="filter-panel" [formGroup]="filterForm" (ngSubmit)="applyFilters()" aria-label="Listing filters">
+      <div class="filter-grid">
+        <label>
+          <span>City</span>
+          <input class="form-control" type="search" formControlName="city" placeholder="Cluj-Napoca" />
+        </label>
+
+        <label>
+          <span>Type</span>
+          <select class="form-select" formControlName="propertyType">
+            <option [ngValue]="''">Any type</option>
+            @for (type of propertyTypes; track type.value) {
+              <option [ngValue]="type.value">{{ type.label }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          <span>Min price</span>
+          <input class="form-control" type="number" min="0" formControlName="minPrice" />
+        </label>
+
+        <label>
+          <span>Max price</span>
+          <input class="form-control" type="number" min="0" formControlName="maxPrice" />
+        </label>
+
+        <label>
+          <span>Bedrooms</span>
+          <input class="form-control" type="number" min="0" formControlName="minBedrooms" />
+        </label>
+
+        <label>
+          <span>Bathrooms</span>
+          <input class="form-control" type="number" min="0" formControlName="minBathrooms" />
+        </label>
+      </div>
+
+      <div class="filter-actions">
+        <button class="btn btn-primary" type="submit">Apply filters</button>
+        <button class="btn btn-outline-secondary" type="button" (click)="clearFilters()">Clear</button>
+      </div>
+    </form>
+
+    @if (isLoading()) {
+      <section class="state-panel" aria-live="polite">
+        <h2>Loading listings</h2>
+        <p>Preparing the current marketplace view.</p>
+      </section>
+    } @else if (loadError()) {
+      <section class="state-panel error" aria-live="polite">
+        <h2>Listings unavailable</h2>
+        <p>{{ loadError() }}</p>
+      </section>
+    } @else if (visibleListings().length === 0) {
+      <section class="state-panel" aria-live="polite">
+        <h2>No matches found</h2>
+        <p>Try widening the filters or add a new listing from the seller workflow.</p>
+      </section>
+    } @else {
+      <div class="results-bar" aria-live="polite">
+        <div>
+          <span class="metric-pill">{{ visibleListings().length }} active listings</span>
+          <span class="metric-pill">Sorted by newest</span>
+        </div>
+        <a routerLink="/evaluate">Need a valuation?</a>
+      </div>
+
+      <div class="listing-grid">
+        @for (listing of visibleListings(); track trackListing($index, listing)) {
+          <article class="listing-card">
+            <a class="listing-media" [routerLink]="['/listings', listing.id]" [attr.aria-label]="'View ' + listing.title">
+              <span>{{ getPropertyType(listing.property.propertyType) }}</span>
+            </a>
+
+            <div class="listing-body">
+              <div class="listing-title-row">
+                <h2>
+                  <a [routerLink]="['/listings', listing.id]">{{ listing.title }}</a>
+                </h2>
+              </div>
+
+              <p class="location">
+                {{ listing.property.address.city }}, {{ listing.property.address.county }}
+              </p>
+
+              <div class="price-row">
+                <strong class="price">{{ listing.askingPrice | currency: 'EUR' : 'symbol' : '1.0-0' }}</strong>
+                <span class="status-pill">{{ getListingStatus(listing.status) }}</span>
+              </div>
+
+              <dl class="listing-facts">
+                <div>
+                  <dt>Area</dt>
+                  <dd>{{ listing.property.area }} m²</dd>
+                </div>
+                <div>
+                  <dt>Bedrooms</dt>
+                  <dd>{{ listing.property.bedrooms }}</dd>
+                </div>
+                <div>
+                  <dt>Bathrooms</dt>
+                  <dd>{{ listing.property.bathrooms }}</dd>
+                </div>
+                <div>
+                  <dt>Price/m²</dt>
+                  <dd>{{ getPricePerSquareMeter(listing) | currency: 'EUR' : 'symbol' : '1.0-0' }}</dd>
+                </div>
+              </dl>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>
