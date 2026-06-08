@@ -1,15 +1,15 @@
 <section class="account-page" aria-labelledby="saved-properties-title">
   <div class="account-shell">
     <header class="account-header">
-      <p class="eyebrow">Buyer workspace</p>
       <div>
+        <p class="page-kicker">Buyer workspace</p>
         <h1 id="saved-properties-title">Saved Properties</h1>
         <p class="intro">Compare homes, revisit favorites, and keep track of market movement.</p>
       </div>
     </header>
 
     <div class="stats-grid" aria-label="Saved properties summary">
-      @for (stat of stats; track stat.label) {
+      @for (stat of stats(); track stat.label) {
         <article class="stat-card">
           <span>{{ stat.label }}</span>
           <strong>{{ stat.value }}</strong>
@@ -17,13 +17,57 @@
       }
     </div>
 
-    <section class="empty-panel" aria-labelledby="saved-empty-title">
-      <div class="empty-icon" aria-hidden="true">S</div>
-      <div>
-        <h2 id="saved-empty-title">No saved properties yet</h2>
-        <p>Properties you save while browsing will appear here for quick comparison.</p>
+    @if (isLoading()) {
+      <section class="empty-panel" aria-labelledby="saved-loading-title" aria-live="polite">
+        <div class="empty-icon" aria-hidden="true">...</div>
+        <div>
+          <h2 id="saved-loading-title">Loading saved properties</h2>
+          <p>Preparing your saved marketplace view.</p>
+        </div>
+      </section>
+    } @else if (loadError()) {
+      <section class="empty-panel error" aria-labelledby="saved-error-title" aria-live="polite">
+        <div class="empty-icon" aria-hidden="true">!</div>
+        <div>
+          <h2 id="saved-error-title">Saved properties unavailable</h2>
+          <p>{{ loadError() }}</p>
+        </div>
+      </section>
+    } @else if (listings().length === 0) {
+      <section class="empty-panel" aria-labelledby="saved-empty-title">
+        <div class="empty-icon" aria-hidden="true">★</div>
+        <div>
+          <h2 id="saved-empty-title">No saved properties yet</h2>
+          <p>Properties you save while browsing will appear here for quick comparison.</p>
+        </div>
+        <a class="btn btn-primary" routerLink="/buy">Browse properties</a>
+      </section>
+    } @else {
+      <div class="saved-list" aria-label="Saved property listings">
+        @for (listing of listings(); track trackListing($index, listing)) {
+          <article class="saved-row">
+            <div>
+              <p class="row-kicker">{{ getPropertyType(listing) }} in {{ listing.property.address.city }}</p>
+              <h2>
+                <a [routerLink]="['/listings', listing.id]">{{ listing.title }}</a>
+              </h2>
+              <p>
+                {{ listing.property.area }} m² ·
+                {{ listing.property.bedrooms }} bedrooms ·
+                {{ getPricePerSquareMeter(listing) | currency: 'EUR' : 'symbol' : '1.0-0' }}/m² ·
+                Listed {{ listing.createdAt | date: 'mediumDate' }}
+              </p>
+            </div>
+            <div class="row-meta">
+              <strong>{{ listing.askingPrice | currency: 'EUR' : 'symbol' : '1.0-0' }}</strong>
+              <span>{{ getListingStatus(listing.status) }}</span>
+              <button class="btn btn-outline-danger btn-sm" type="button" (click)="removeSaved(listing)">
+                Remove
+              </button>
+            </div>
+          </article>
+        }
       </div>
-      <a class="btn btn-primary" routerLink="/buy">Browse properties</a>
-    </section>
+    }
   </div>
 </section>

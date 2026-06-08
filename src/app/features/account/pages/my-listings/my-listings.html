@@ -1,15 +1,16 @@
 <section class="account-page" aria-labelledby="my-listings-title">
   <div class="account-shell">
     <header class="account-header">
-      <p class="eyebrow">Seller workspace</p>
       <div>
+        <p class="page-kicker">Seller workspace</p>
         <h1 id="my-listings-title">My Listings</h1>
         <p class="intro">Track published homes, draft listings, and buyer activity.</p>
       </div>
+      <a class="btn btn-primary" routerLink="/sell">Create listing</a>
     </header>
 
     <div class="stats-grid" aria-label="Listing summary">
-      @for (stat of stats; track stat.label) {
+      @for (stat of stats(); track stat.label) {
         <article class="stat-card">
           <span>{{ stat.label }}</span>
           <strong>{{ stat.value }}</strong>
@@ -17,13 +18,49 @@
       }
     </div>
 
-    <section class="empty-panel" aria-labelledby="listings-empty-title">
-      <div class="empty-icon" aria-hidden="true">+</div>
-      <div>
-        <h2 id="listings-empty-title">No listings yet</h2>
-        <p>Your property listings will appear here once you publish or save a draft.</p>
+    @if (isLoading()) {
+      <section class="empty-panel" aria-labelledby="listings-loading-title" aria-live="polite">
+        <div class="empty-icon" aria-hidden="true">...</div>
+        <div>
+          <h2 id="listings-loading-title">Loading listings</h2>
+          <p>Preparing your seller workspace.</p>
+        </div>
+      </section>
+    } @else if (loadError()) {
+      <section class="empty-panel error" aria-labelledby="listings-error-title" aria-live="polite">
+        <div class="empty-icon" aria-hidden="true">!</div>
+        <div>
+          <h2 id="listings-error-title">Listings unavailable</h2>
+          <p>{{ loadError() }}</p>
+        </div>
+      </section>
+    } @else if (listings().length === 0) {
+      <section class="empty-panel" aria-labelledby="listings-empty-title">
+        <div class="empty-icon" aria-hidden="true">+</div>
+        <div>
+          <h2 id="listings-empty-title">No listings yet</h2>
+          <p>Your property listings will appear here once you publish or save a draft.</p>
+        </div>
+        <a class="btn btn-outline-primary" routerLink="/sell">Create listing</a>
+      </section>
+    } @else {
+      <div class="listings-list" aria-label="Your property listings">
+        @for (listing of listings(); track trackListing($index, listing)) {
+          <article class="listing-row">
+            <div>
+              <p class="row-kicker">{{ getPropertyType(listing) }} in {{ listing.property.address.city }}</p>
+              <h2>
+                <a [routerLink]="['/listings', listing.id]">{{ listing.title }}</a>
+              </h2>
+              <p>{{ listing.property.area }} m² · {{ listing.property.bedrooms }} bedrooms · Listed {{ listing.createdAt | date: 'mediumDate' }}</p>
+            </div>
+            <div class="row-meta">
+              <strong>{{ listing.askingPrice | currency: 'EUR' : 'symbol' : '1.0-0' }}</strong>
+              <span>{{ getListingStatus(listing.status) }}</span>
+            </div>
+          </article>
+        }
       </div>
-      <a class="btn btn-primary" routerLink="/sell">Create listing</a>
-    </section>
+    }
   </div>
 </section>

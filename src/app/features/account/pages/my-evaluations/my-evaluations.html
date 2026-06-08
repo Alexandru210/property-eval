@@ -1,15 +1,15 @@
 <section class="account-page" aria-labelledby="my-evaluations-title">
   <div class="account-shell">
     <header class="account-header">
-      <p class="eyebrow">Valuation history</p>
       <div>
+        <p class="page-kicker">Valuation history</p>
         <h1 id="my-evaluations-title">My Evaluations</h1>
         <p class="intro">Review property estimates, report status, and valuation history.</p>
       </div>
     </header>
 
     <div class="stats-grid" aria-label="Evaluation summary">
-      @for (stat of stats; track stat.label) {
+      @for (stat of stats(); track stat.label) {
         <article class="stat-card">
           <span>{{ stat.label }}</span>
           <strong>{{ stat.value }}</strong>
@@ -17,13 +17,56 @@
       }
     </div>
 
-    <section class="empty-panel" aria-labelledby="evaluations-empty-title">
-      <div class="empty-icon" aria-hidden="true">E</div>
-      <div>
-        <h2 id="evaluations-empty-title">No evaluations yet</h2>
-        <p>Requested valuations and saved estimates will appear here.</p>
+    @if (isLoading()) {
+      <section class="empty-panel" aria-labelledby="evaluations-loading-title" aria-live="polite">
+        <div class="empty-icon" aria-hidden="true">...</div>
+        <div>
+          <h2 id="evaluations-loading-title">Loading evaluations</h2>
+          <p>Preparing your valuation history.</p>
+        </div>
+      </section>
+    } @else if (loadError()) {
+      <section class="empty-panel error" aria-labelledby="evaluations-error-title" aria-live="polite">
+        <div class="empty-icon" aria-hidden="true">!</div>
+        <div>
+          <h2 id="evaluations-error-title">Evaluations unavailable</h2>
+          <p>{{ loadError() }}</p>
+        </div>
+      </section>
+    } @else if (evaluations().length === 0) {
+      <section class="empty-panel" aria-labelledby="evaluations-empty-title">
+        <div class="empty-icon" aria-hidden="true">✓</div>
+        <div>
+          <h2 id="evaluations-empty-title">No evaluations yet</h2>
+          <p>Requested valuations and completed reports will appear here.</p>
+        </div>
+        <a class="btn btn-primary" routerLink="/evaluate">Request evaluation</a>
+      </section>
+    } @else {
+      <div class="evaluation-list" aria-label="Your property evaluations">
+        @for (evaluation of evaluations(); track trackEvaluation($index, evaluation)) {
+          <article class="evaluation-row">
+            <div>
+              <p class="row-kicker">{{ getPropertyType(evaluation) }} in {{ evaluation.property.address.city }}</p>
+              <h2>{{ evaluation.property.address.street }}</h2>
+              <p>
+                Requested {{ evaluation.createdAt | date: 'mediumDate' }}
+                @if (evaluation.evaluatorUserFullName) {
+                  · Evaluator: {{ evaluation.evaluatorUserFullName }}
+                }
+              </p>
+            </div>
+            <div class="row-meta">
+              @if (evaluation.evaluatedValue > 0) {
+                <strong>{{ evaluation.evaluatedValue | currency: 'EUR' : 'symbol' : '1.0-0' }}</strong>
+              } @else {
+                <strong>Pending</strong>
+              }
+              <span>{{ getEvaluationStatus(evaluation.status) }}</span>
+            </div>
+          </article>
+        }
       </div>
-      <a class="btn btn-primary" routerLink="/evaluate">Request evaluation</a>
-    </section>
+    }
   </div>
 </section>

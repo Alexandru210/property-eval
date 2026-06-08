@@ -1,6 +1,6 @@
 .account-page {
   min-height: calc(100vh - 12rem);
-  padding: 3rem 1rem;
+  padding: 2rem 1rem 3rem;
   background: #f8fafc;
 }
 
@@ -15,15 +15,6 @@
   justify-content: space-between;
   gap: 1.5rem;
   margin-bottom: 1.5rem;
-}
-
-.eyebrow {
-  margin: 0;
-  color: #0d6efd;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0;
-  text-transform: uppercase;
 }
 
 h1 {
@@ -49,9 +40,9 @@ h1 {
 .stat-card,
 .empty-panel {
   background: #ffffff;
-  border: 1px solid #e4e7ec;
-  border-radius: 0.5rem;
-  box-shadow: 0 1rem 2.5rem rgba(16, 24, 40, 0.06);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
 }
 
 .stat-card {
@@ -80,16 +71,20 @@ h1 {
   padding: 1.25rem;
 }
 
+.empty-panel.error {
+  border-color: #fecdca;
+}
+
 .empty-icon {
   width: 2.75rem;
   height: 2.75rem;
   display: grid;
   place-items: center;
   color: #0d6efd;
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   font-weight: 700;
   background: #eff6ff;
-  border-radius: 50%;
+  border-radius: 0.5rem;
 }
 
 h2 {
@@ -103,6 +98,70 @@ h2 {
   color: #667085;
 }
 
+.listings-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.listing-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+
+  h2 {
+    margin: 0.15rem 0 0;
+  }
+
+  h2 a {
+    color: #101828;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      color: #0d6efd;
+    }
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    color: #667085;
+  }
+}
+
+.row-kicker {
+  color: #0d6efd !important;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.row-meta {
+  display: grid;
+  justify-items: end;
+  gap: 0.35rem;
+
+  strong {
+    color: #101828;
+    font-size: 1.2rem;
+    white-space: nowrap;
+  }
+
+  span {
+    padding: 0.25rem 0.5rem;
+    color: #027a48;
+    font-size: 0.75rem;
+    font-weight: 800;
+    background: #ecfdf3;
+    border-radius: 999px;
+  }
+}
+
 .btn {
   white-space: nowrap;
 }
@@ -113,9 +172,19 @@ h2 {
   }
 
   .account-header,
-  .empty-panel {
+  .empty-panel,
+  .listing-row {
     align-items: start;
     grid-template-columns: 1fr;
+  }
+
+  .listing-row {
+    flex-direction: column;
+  }
+
+  .row-meta {
+    width: 100%;
+    justify-items: start;
   }
 
   .stats-grid {
