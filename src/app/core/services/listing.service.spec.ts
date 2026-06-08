@@ -61,6 +61,7 @@ function createListing(id: number): PropertyListing {
       bathrooms: 1,
       yearBuilt: 2020,
       description: 'Test property',
+      images: [],
       createdAt: '2026-06-02T00:00:00Z',
       updatedAt: null,
     },

@@ -29,6 +29,11 @@
   align-items: start;
 }
 
+.media-column {
+  display: grid;
+  gap: 0.75rem;
+}
+
 .media-panel,
 .summary-panel,
 .state-panel {
@@ -39,20 +44,86 @@
 }
 
 .media-panel {
+  position: relative;
   min-height: 28rem;
   display: flex;
   align-items: end;
   padding: 1.25rem;
+  overflow: hidden;
   background:
     linear-gradient(180deg, rgba(16, 24, 40, 0.06), rgba(16, 24, 40, 0.58)),
     url("/assets/property-marketplace-hero.webp") center / cover;
 
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: linear-gradient(180deg, rgba(16, 24, 40, 0.03), rgba(16, 24, 40, 0.55));
+  }
+
   span {
+    position: relative;
+    z-index: 1;
     padding: 0.45rem 0.75rem;
     color: #101828;
     font-weight: 800;
     background: rgba(255, 255, 255, 0.88);
     border-radius: 0.35rem;
+  }
+}
+
+.media-button {
+  width: 100%;
+  border: 1px solid var(--border-subtle);
+  cursor: zoom-in;
+
+  &:hover,
+  &:focus-visible {
+    border-color: #0d6efd;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.16);
+  }
+}
+
+.thumbnail-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+
+  img,
+  .thumbnail-button {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+  }
+
+  img {
+    object-fit: cover;
+    display: block;
+    background: #e4e7ec;
+  }
+}
+
+.thumbnail-button {
+  padding: 0;
+  overflow: hidden;
+  cursor: zoom-in;
+  background: #e4e7ec;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+
+  &:hover,
+  &:focus-visible {
+    border-color: #0d6efd;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.16);
   }
 }
 
@@ -196,4 +267,9 @@ h2 {
   .price {
     white-space: normal;
   }
+
+  .thumbnail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
 }

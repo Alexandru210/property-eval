@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { ListingStatus, PropertyListing, PropertyRecord, PropertyType } from '../../../../core/models/property.model';
 import { ListingService } from '../../../../core/services/listing.service';
 import { PropertyService } from '../../../../core/services/property.service';
@@ -8,12 +8,16 @@ import { Sell } from './sell';
 describe('Sell', () => {
   let component: Sell;
   let fixture: ComponentFixture<Sell>;
-  let propertyService: { createProperty: ReturnType<typeof vi.fn> };
+  let propertyService: {
+    createProperty: ReturnType<typeof vi.fn>;
+    uploadPropertyImages: ReturnType<typeof vi.fn>;
+  };
   let listingService: { createListing: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     propertyService = {
       createProperty: vi.fn().mockResolvedValue(createProperty(42)),
+      uploadPropertyImages: vi.fn().mockResolvedValue([]),
     };
     listingService = {
       createListing: vi.fn().mockResolvedValue(createListing(9, 42)),
@@ -27,6 +31,9 @@ describe('Sell', () => {
         { provide: ListingService, useValue: listingService },
       ],
     }).compileComponents();
+
+    const router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
 
     fixture = TestBed.createComponent(Sell);
     component = fixture.componentInstance;
@@ -43,6 +50,30 @@ describe('Sell', () => {
     );
   });
 
+  it('should redirect to the created listing', async () => {
+    await component['submit']();
+
+    expect(TestBed.inject(Router).navigate).toHaveBeenCalledWith(['/listings', 9]);
+  });
+
+  it('should upload selected images before creating the listing', async () => {
+    const file = new File(['image'], 'front.jpg', { type: 'image/jpeg' });
+
+    component['onImageSelection']({
+      target: {
+        files: [file],
+        value: '',
+      },
+    } as unknown as Event);
+
+    await component['submit']();
+
+    expect(propertyService.uploadPropertyImages).toHaveBeenCalledWith(42, [file]);
+    expect(listingService.createListing).toHaveBeenCalledWith(
+      expect.objectContaining({ propertyId: 42 }),
+    );
+  });
+
   it('should retry listing creation without creating another property', async () => {
     listingService.createListing
       .mockRejectedValueOnce(new Error('failed'))
@@ -52,6 +83,26 @@ describe('Sell', () => {
     await component['submit']();
 
     expect(propertyService.createProperty).toHaveBeenCalledTimes(1);
+    expect(listingService.createListing).toHaveBeenCalledTimes(2);
+  });
+
+  it('should not upload the same selected images again when retrying listing creation', async () => {
+    const file = new File(['image'], 'front.jpg', { type: 'image/jpeg' });
+
+    component['onImageSelection']({
+      target: {
+        files: [file],
+        value: '',
+      },
+    } as unknown as Event);
+    listingService.createListing
+      .mockRejectedValueOnce(new Error('failed'))
+      .mockResolvedValueOnce(createListing(10, 42));
+
+    await component['submit']();
+    await component['submit']();
+
+    expect(propertyService.uploadPropertyImages).toHaveBeenCalledTimes(1);
     expect(listingService.createListing).toHaveBeenCalledTimes(2);
   });
 
@@ -100,6 +151,7 @@ function createProperty(id: number): PropertyRecord {
     bathrooms: 1,
     yearBuilt: 2020,
     description: 'A good apartment.',
+    images: [],
     createdAt: '2026-06-02T00:00:00Z',
     updatedAt: null,
   };

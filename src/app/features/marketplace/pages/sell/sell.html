@@ -29,14 +29,6 @@
         </div>
       }
 
-      @if (createdListing(); as listing) {
-        <div class="alert alert-success" role="status">
-          Listing created:
-          <a [routerLink]="['/listings', listing.id]">{{ listing.title }}</a>
-          at {{ listing.askingPrice | currency: 'EUR' : 'symbol' : '1.0-0' }}.
-        </div>
-      }
-
       <section aria-labelledby="property-section-title">
         <h2 id="property-section-title">Property details</h2>
         <div class="form-grid">
@@ -89,6 +81,44 @@
           <span>Description</span>
           <textarea class="form-control" rows="5" formControlName="description" [class.is-invalid]="hasError('description', 'required') || hasError('description', 'maxlength')"></textarea>
         </label>
+      </section>
+
+      <section aria-labelledby="photos-section-title">
+        <h2 id="photos-section-title">Photos</h2>
+        <div class="photo-uploader">
+          <label class="photo-picker">
+            <input
+              type="file"
+              multiple
+              [accept]="acceptedImageTypes"
+              (change)="onImageSelection($event)"
+            />
+            <span>Add photos</span>
+            <small>JPG, PNG, WebP | {{ maxImageSizeLabel }} max | {{ selectedImages().length }}/{{ maxImageCount }}</small>
+          </label>
+
+          @if (photoError()) {
+            <div class="alert alert-danger photo-error" role="alert">{{ photoError() }}</div>
+          }
+
+          @if (selectedImages().length > 0) {
+            <div class="photo-grid" aria-label="Selected property photos">
+              @for (image of selectedImages(); track image.id) {
+                <figure class="photo-preview">
+                  @if (image.previewUrl) {
+                    <img [src]="image.previewUrl" [alt]="image.file.name" />
+                  } @else {
+                    <div class="photo-placeholder">{{ image.file.name }}</div>
+                  }
+                  <figcaption>
+                    <span>{{ image.file.name }}</span>
+                    <button class="btn btn-sm btn-outline-danger" type="button" (click)="removeSelectedImage(image.id)">Remove</button>
+                  </figcaption>
+                </figure>
+              }
+            </div>
+          }
+        </div>
       </section>
 
       <section aria-labelledby="listing-section-title">

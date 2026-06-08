@@ -66,6 +66,7 @@ function createEvaluation(id: number): PropertyEvaluation {
       bathrooms: 1,
       yearBuilt: 2020,
       description: 'A good apartment.',
+      images: [],
       createdAt: '2026-06-02T00:00:00Z',
       updatedAt: null,
     },

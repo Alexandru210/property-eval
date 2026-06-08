@@ -60,8 +60,17 @@ export interface PropertyRecord {
   bathrooms: number;
   yearBuilt: number;
   description: string;
+  images: PropertyImage[];
   createdAt: string;
   updatedAt: string | null;
+}
+
+export interface PropertyImage {
+  id: number;
+  propertyId: number;
+  imageUrl: string;
+  description: string | null;
+  uploadedAt: string;
 }
 
 export interface PropertyValuation {

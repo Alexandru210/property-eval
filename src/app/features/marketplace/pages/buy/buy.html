@@ -81,6 +81,9 @@
         @for (listing of visibleListings(); track trackListing($index, listing)) {
           <article class="listing-card">
             <a class="listing-media" [routerLink]="['/listings', listing.id]" [attr.aria-label]="'View ' + listing.title">
+              @if (getListingImageUrl(listing); as imageUrl) {
+                <img [src]="imageUrl" [alt]="listing.title" />
+              }
               <span>{{ getPropertyType(listing.property.propertyType) }}</span>
             </a>
 

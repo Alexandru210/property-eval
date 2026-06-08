@@ -10,6 +10,7 @@ import {
   getListingStatusLabel,
   getPropertyTypeLabel,
 } from '../../../../core/models/property.model';
+import { resolveApiImageUrl } from '../../../../core/services/image-url';
 import { ListingService } from '../../../../core/services/listing.service';
 
 interface BuyFilters {
@@ -84,6 +85,12 @@ export class Buy {
 
   protected getPricePerSquareMeter(listing: PropertyListing): number {
     return Math.round(listing.askingPrice / Math.max(listing.property.area, 1));
+  }
+
+  protected getListingImageUrl(listing: PropertyListing): string | null {
+    const imageUrl = listing.property.images[0]?.imageUrl;
+
+    return imageUrl ? resolveApiImageUrl(imageUrl) : null;
   }
 
   protected trackListing(_index: number, listing: PropertyListing): number {

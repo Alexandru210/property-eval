@@ -14,8 +14,29 @@
       </section>
     } @else if (listing(); as listing) {
       <div class="detail-grid">
-        <div class="media-panel">
-          <span>{{ getPropertyType(listing.property.propertyType) }}</span>
+        <div class="media-column">
+          @if (listing.property.images.length > 0) {
+            <button class="media-panel media-button" type="button" (click)="openPhoto(0)" [attr.aria-label]="'Open photo for ' + listing.title">
+              @if (getPrimaryImageUrl(listing); as imageUrl) {
+                <img [src]="imageUrl" [alt]="listing.title" />
+              }
+              <span>{{ getPropertyType(listing.property.propertyType) }}</span>
+            </button>
+          } @else {
+            <div class="media-panel">
+              <span>{{ getPropertyType(listing.property.propertyType) }}</span>
+            </div>
+          }
+
+          @if (listing.property.images.length > 1) {
+            <div class="thumbnail-grid" aria-label="Property photo gallery">
+              @for (image of listing.property.images; track image.id) {
+                <button class="thumbnail-button" type="button" (click)="openPhoto($index)" [attr.aria-label]="'Open photo ' + ($index + 1) + ' for ' + listing.title">
+                  <img [src]="getImageUrl(image.imageUrl)" [alt]="image.description || listing.title" />
+                </button>
+              }
+            </div>
+          }
         </div>
 
         <article class="summary-panel">
@@ -92,6 +113,25 @@
           </aside>
         </article>
       </div>
+
+      @if (getSelectedPhoto(listing); as selectedPhoto) {
+        <div class="photo-lightbox" role="dialog" aria-modal="true" [attr.aria-label]="listing.title + ' photo viewer'" (click)="closePhoto()">
+          <div class="lightbox-panel" (click)="$event.stopPropagation()">
+            <button class="lightbox-close" type="button" (click)="closePhoto()" aria-label="Close photo viewer">Close</button>
+
+            @if (listing.property.images.length > 1) {
+              <button class="lightbox-nav previous" type="button" (click)="showPreviousPhoto(listing)" aria-label="Previous photo">Previous</button>
+            }
+
+            <img [src]="getImageUrl(selectedPhoto.imageUrl)" [alt]="selectedPhoto.description || listing.title" />
+
+            @if (listing.property.images.length > 1) {
+              <button class="lightbox-nav next" type="button" (click)="showNextPhoto(listing)" aria-label="Next photo">Next</button>
+              <p class="lightbox-count">{{ selectedPhotoIndex()! + 1 }} / {{ listing.property.images.length }}</p>
+            }
+          </div>
+        </div>
+      }
     }
   </div>
 </section>
