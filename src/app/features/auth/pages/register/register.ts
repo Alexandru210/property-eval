@@ -30,7 +30,7 @@ export class Register {
       firstName: ['', [Validators.required, Validators.maxLength(40)]],
       lastName: ['', [Validators.required, Validators.maxLength(40)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
     },
     { validators: this.passwordsMatchValidator },
@@ -95,7 +95,7 @@ export class Register {
       }
 
       if (error.status === 0) {
-        return 'Could not reach the server. Please check that the API is running and try again.';
+        return 'Could not reach the server. Please check your connection and try again.';
       }
 
       if (error.status === 409) {

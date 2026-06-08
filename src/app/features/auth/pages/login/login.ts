@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
@@ -15,6 +15,7 @@ export class Login {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
@@ -40,7 +41,7 @@ export class Login {
         email: email.trim(),
         password,
       });
-      await this.router.navigateByUrl('/');
+      await this.router.navigateByUrl(this.route.snapshot.queryParamMap.get('returnUrl') ?? '/');
     } catch (error) {
       this.submitError.set(this.getSubmitErrorMessage(error));
     } finally {
@@ -62,7 +63,7 @@ export class Login {
       }
 
       if (error.status === 0) {
-        return 'Could not reach the server. Please check that the API is running and try again.';
+        return 'Could not reach the server. Please check your connection and try again.';
       }
 
       if (error.status === 401 || error.status === 403) {

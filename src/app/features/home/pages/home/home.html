@@ -1,1 +1,40 @@
-<p>home works!</p>
+<section class="home-page" aria-labelledby="home-title">
+  <div class="home-shell">
+    <section class="hero-panel">
+      <div class="hero-copy">
+        <p class="page-kicker">Property marketplace</p>
+        <h1 id="home-title">Evaluate, list, and compare residential property.</h1>
+        <p class="intro">
+          A focused workspace for buyers reviewing listings, sellers publishing properties, and users tracking valuation requests.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" routerLink="/buy">Browse listings</a>
+          <a class="btn btn-outline-primary" routerLink="/evaluate">Start valuation</a>
+        </div>
+      </div>
+      <div class="hero-media" aria-hidden="true">
+        <img src="/assets/property-marketplace-hero.webp" alt="" />
+      </div>
+    </section>
+
+    <div class="workspace-grid">
+      @for (workspace of workspaces; track workspace.route) {
+        <article class="workspace-card">
+          <span>{{ workspace.metric }}</span>
+          <h2>{{ workspace.title }}</h2>
+          <p>{{ workspace.description }}</p>
+          <a class="card-link" [routerLink]="workspace.route">{{ workspace.action }}</a>
+        </article>
+      }
+    </div>
+
+    <dl class="status-panel" aria-label="Property Eval workspace summary">
+      @for (stat of stats; track stat.label) {
+        <div>
+          <dt>{{ stat.label }}</dt>
+          <dd>{{ stat.value }}</dd>
+        </div>
+      }
+    </dl>
+  </div>
+</section>

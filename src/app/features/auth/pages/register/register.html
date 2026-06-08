@@ -12,7 +12,6 @@
       @if (submitError()) {
         <div class="alert alert-danger" role="alert">
           {{ submitError() }}
-          salut
         </div>
       }
 
@@ -94,7 +93,7 @@
             @if (hasError('password', 'required')) {
               Create a password.
             } @else if (hasError('password', 'minlength')) {
-              Use at least 8 characters.
+              Use at least 6 characters.
             }
           </p>
         </div>
