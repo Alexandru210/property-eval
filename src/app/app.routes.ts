@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth.guard';
+import { staffGuard } from './core/staff.guard';
 
 export const routes: Routes = [
     { path: '', loadComponent: () => import('./features/home/pages/home/home').then((m) => m.Home) },
@@ -7,6 +8,7 @@ export const routes: Routes = [
     { path: 'listings/:id', loadComponent: () => import('./features/marketplace/pages/listing-detail/listing-detail').then((m) => m.ListingDetail) },
     { path: 'sell', loadComponent: () => import('./features/marketplace/pages/sell/sell').then((m) => m.Sell), canActivate: [authGuard] },
     { path: 'evaluate', loadComponent: () => import('./features/evaluation/pages/evaluate/evaluate').then((m) => m.Evaluate), canActivate: [authGuard] },
+    { path: 'evaluation-workbench', loadComponent: () => import('./features/evaluation/pages/evaluation-workbench/evaluation-workbench').then((m) => m.EvaluationWorkbench), canActivate: [authGuard, staffGuard] },
     { path: 'login', loadComponent: () => import('./features/auth/pages/login/login').then((m) => m.Login) },
     { path: 'register', loadComponent: () => import('./features/auth/pages/register/register').then((m) => m.Register) },
     { path: 'my-listings', loadComponent: () => import('./features/account/pages/my-listings/my-listings').then((m) => m.MyListings), canActivate: [authGuard] },

@@ -16,6 +16,11 @@ export class AuthService {
   currentUser = this.currentUserSignal.asReadonly();
   isAuthenticated = computed(() => this.currentUserSignal() !== null);
   isAdmin = computed(() => this.currentUserSignal()?.role === 'admin');
+  isStaff = computed(() => {
+    const role = this.currentUserSignal()?.role;
+
+    return role === 'admin' || role === 'evaluator';
+  });
   isLoading = this.isLoadingSignal.asReadonly();
 
   constructor(private http: HttpClient) {
@@ -50,7 +55,7 @@ export class AuthService {
     }
 
     try {
-      return JSON.parse(storedUser) as User;
+      return this.normalizeStoredUser(JSON.parse(storedUser) as User);
     } catch {
       localStorage.removeItem('currentUser');
       return null;
@@ -127,19 +132,41 @@ export class AuthService {
   }
 
   private mapAuthResponseToUser(response: AuthResponse): User {
+    const role = this.mapBackendRole(response.role);
+
     return {
       id: response.id,
       email: response.email,
       firstName: response.firstName,
       lastName: response.lastName,
       name: `${response.firstName} ${response.lastName}`.trim(),
-      role: this.mapBackendRole(response.role),
+      role,
       backendRole: response.role,
     };
   }
 
   private mapBackendRole(role: string | undefined): UserRole {
-    return role?.toLowerCase() === 'admin' ? 'admin' : 'user';
+    const normalizedRole = role?.toLowerCase();
+
+    if (normalizedRole === 'admin') {
+      return 'admin';
+    }
+
+    if (normalizedRole === 'evaluator') {
+      return 'evaluator';
+    }
+
+    return 'client';
+  }
+
+  private normalizeStoredUser(user: User): User {
+    const role = this.mapBackendRole(user.backendRole ?? user.role);
+
+    return {
+      ...user,
+      role,
+      backendRole: user.backendRole ?? role,
+    };
   }
 
   private clearStoredAuthData(): void {

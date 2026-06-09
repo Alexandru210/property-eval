@@ -4,18 +4,29 @@ import { provideRouter } from '@angular/router';
 
 import { Navbar } from './navbar';
 import { AuthService } from '../../../core/services/auth.service';
+import { User } from '../../../core/models/user.model';
 
 describe('Navbar', () => {
   let component: Navbar;
   let fixture: ComponentFixture<Navbar>;
-  let currentUser: ReturnType<typeof signal>;
-  let authService: { currentUser: ReturnType<typeof signal>; isAuthenticated: ReturnType<typeof computed>; logout: ReturnType<typeof vi.fn> };
+  let currentUser: ReturnType<typeof signal<User | null>>;
+  let authService: {
+    currentUser: ReturnType<typeof signal<User | null>>;
+    isAuthenticated: ReturnType<typeof computed>;
+    isStaff: ReturnType<typeof computed>;
+    logout: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(async () => {
-    currentUser = signal(null);
+    currentUser = signal<User | null>(null);
     authService = {
       currentUser,
       isAuthenticated: computed(() => currentUser() !== null),
+      isStaff: computed(() => {
+        const role = currentUser()?.role;
+
+        return role === 'admin' || role === 'evaluator';
+      }),
       logout: vi.fn(),
     };
 
@@ -46,14 +57,7 @@ describe('Navbar', () => {
   });
 
   it('should show the current user menu and hide auth links when authenticated', () => {
-    currentUser.set({
-      id: 12,
-      email: 'alex@example.com',
-      firstName: 'Alex',
-      lastName: 'Morgan',
-      name: 'Alex Morgan',
-      role: 'user',
-    });
+    currentUser.set(createUser('client'));
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -63,6 +67,7 @@ describe('Navbar', () => {
     expect(text).toContain('My Listings');
     expect(text).toContain('Saved Properties');
     expect(text).toContain('My Evaluations');
+    expect(text).not.toContain('Evaluation Workbench');
     expect(text).toContain('Logout');
     expect(text).not.toContain('Sign In');
     expect(text).not.toContain('Register');
@@ -75,4 +80,27 @@ describe('Navbar', () => {
 
     expect(authService.logout).toHaveBeenCalled();
   });
+
+  it('should show the evaluation workbench link for staff users', () => {
+    currentUser.set(createUser('evaluator'));
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const text = compiled.textContent ?? '';
+
+    expect(text).toContain('Evaluation Workbench');
+    expect(compiled.querySelector('a[routerLink="/evaluation-workbench"]')).not.toBeNull();
+  });
 });
+
+function createUser(role: User['role']): User {
+  return {
+    id: 12,
+    email: 'alex@example.com',
+    firstName: 'Alex',
+    lastName: 'Morgan',
+    name: 'Alex Morgan',
+    role,
+    backendRole: role,
+  };
+}

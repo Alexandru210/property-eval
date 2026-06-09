@@ -36,6 +36,11 @@
             <a class="account-menu-item account-menu-link" routerLink="/my-evaluations" routerLinkActive="active" (click)="accountMenu.open = false; closeMenu()">
               My Evaluations
             </a>
+            @if (isStaff()) {
+              <a class="account-menu-item account-menu-link" routerLink="/evaluation-workbench" routerLinkActive="active" (click)="accountMenu.open = false; closeMenu()">
+                Evaluation Workbench
+              </a>
+            }
             <div class="account-menu-divider" role="separator" aria-hidden="true"></div>
             <button class="account-menu-item" type="button" (click)="logout()">
               Logout

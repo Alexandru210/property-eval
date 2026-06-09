@@ -15,6 +15,7 @@ export class Navbar {
 
   protected readonly currentUser = this.authService.currentUser;
   protected readonly isAuthenticated = this.authService.isAuthenticated;
+  protected readonly isStaff = this.authService.isStaff;
 
   closeMenu(): void {
     // Kept for nav links so a future mobile menu can close from the same click handler.

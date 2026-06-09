@@ -2,7 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CreateEvaluationRequest, EvaluationFilters, PropertyEvaluation } from '../models/property.model';
+import {
+  CompleteEvaluationRequest,
+  CreateEvaluationRequest,
+  EvaluationFilters,
+  PropertyEvaluation,
+} from '../models/property.model';
 import { buildHttpParams } from './query-params';
 
 @Injectable({ providedIn: 'root' })
@@ -21,5 +26,9 @@ export class EvaluationService {
 
   createEvaluation(request: CreateEvaluationRequest): Promise<PropertyEvaluation> {
     return firstValueFrom(this.http.post<PropertyEvaluation>(`${this.apiUrl}/evaluations`, request));
+  }
+
+  completeEvaluation(request: CompleteEvaluationRequest): Promise<PropertyEvaluation> {
+    return firstValueFrom(this.http.patch<PropertyEvaluation>(`${this.apiUrl}/evaluations/${request.id}`, request));
   }
 }

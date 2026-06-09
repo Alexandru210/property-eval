@@ -158,6 +158,13 @@ export interface CreateEvaluationRequest {
   notes?: string | null;
 }
 
+export interface CompleteEvaluationRequest {
+  id: number;
+  evaluatedValue: number;
+  notes?: string | null;
+  evaluationDate?: string | null;
+}
+
 export interface EvaluationFilters {
   propertyId?: number;
   requestedByUserId?: number;

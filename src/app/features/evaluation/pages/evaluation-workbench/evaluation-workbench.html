@@ -1,0 +1,169 @@
+<section class="workbench-page" aria-labelledby="evaluation-workbench-title">
+  <div class="workbench-shell">
+    <header class="workbench-header">
+      <div>
+        <p class="page-kicker">Valuation operations</p>
+        <h1 id="evaluation-workbench-title">Evaluation Workbench</h1>
+        <p class="intro">{{ intro() }}</p>
+      </div>
+    </header>
+
+    <div class="stats-grid" aria-label="Evaluation workbench summary">
+      @for (stat of stats(); track stat.label) {
+        <article class="stat-card">
+          <span>{{ stat.label }}</span>
+          <strong>{{ stat.value }}</strong>
+        </article>
+      }
+    </div>
+
+    <div class="filter-tabs" aria-label="Evaluation status filters">
+      @for (option of statusFilters; track option.label) {
+        <button
+          class="filter-chip"
+          type="button"
+          [class.active]="activeStatus() === option.value"
+          (click)="setStatusFilter(option.value)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+
+    @if (completionSuccess()) {
+      <div class="alert alert-success" role="status">
+        {{ completionSuccess() }}
+      </div>
+    }
+
+    @if (isLoading()) {
+      <section class="state-panel" aria-labelledby="workbench-loading-title" aria-live="polite">
+        <h2 id="workbench-loading-title">Loading evaluations</h2>
+        <p>Preparing the current workbench queue.</p>
+      </section>
+    } @else if (loadError()) {
+      <section class="state-panel error" aria-labelledby="workbench-error-title" aria-live="polite">
+        <h2 id="workbench-error-title">Evaluations unavailable</h2>
+        <p>{{ loadError() }}</p>
+      </section>
+    } @else if (visibleEvaluations().length === 0) {
+      <section class="state-panel" aria-labelledby="workbench-empty-title">
+        <h2 id="workbench-empty-title">No evaluations found</h2>
+        <p>There are no requests for the selected status.</p>
+      </section>
+    } @else {
+      <div class="evaluation-list" aria-label="Evaluation requests">
+        @for (evaluation of visibleEvaluations(); track trackEvaluation($index, evaluation)) {
+          <article class="evaluation-card">
+            <div class="evaluation-row">
+              <div class="evaluation-main">
+                <p class="row-kicker">{{ getPropertyType(evaluation) }} in {{ evaluation.property.address.city }}</p>
+                <h2>{{ evaluation.property.address.street }}</h2>
+                <p>
+                  Requested by {{ evaluation.requestedByUserFullName }}
+                  on {{ evaluation.createdAt | date: 'mediumDate' }}
+                </p>
+                @if (evaluation.evaluatorUserFullName) {
+                  <p>Evaluator: {{ evaluation.evaluatorUserFullName }}</p>
+                }
+
+                <dl class="fact-list">
+                  <div>
+                    <dt>Area</dt>
+                    <dd>{{ evaluation.property.area }} sqm</dd>
+                  </div>
+                  <div>
+                    <dt>Bedrooms</dt>
+                    <dd>{{ evaluation.property.bedrooms }}</dd>
+                  </div>
+                  <div>
+                    <dt>Bathrooms</dt>
+                    <dd>{{ evaluation.property.bathrooms }}</dd>
+                  </div>
+                  <div>
+                    <dt>Built</dt>
+                    <dd>{{ evaluation.property.yearBuilt }}</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div class="row-meta">
+                @if (evaluation.evaluatedValue > 0) {
+                  <strong>{{ evaluation.evaluatedValue | currency: 'EUR' : 'symbol' : '1.0-0' }}</strong>
+                } @else {
+                  <strong>Not recorded</strong>
+                }
+                <span class="status-pill {{ getStatusClass(evaluation.status) }}">
+                  {{ getEvaluationStatus(evaluation.status) }}
+                </span>
+                @if (isCompletable(evaluation)) {
+                  <button class="btn btn-primary" type="button" (click)="openCompletion(evaluation)">
+                    Complete
+                  </button>
+                }
+              </div>
+            </div>
+
+            @if (activeEvaluationId() === evaluation.id) {
+              <form class="completion-form" [formGroup]="completionForm" (ngSubmit)="submitCompletion(evaluation)" novalidate>
+                @if (completionError()) {
+                  <div class="alert alert-danger" role="alert">
+                    {{ completionError() }}
+                  </div>
+                }
+
+                <div class="completion-grid">
+                  <label>
+                    <span>Evaluated value</span>
+                    <input
+                      class="form-control"
+                      type="number"
+                      min="0.01"
+                      step="1000"
+                      formControlName="evaluatedValue"
+                      [class.is-invalid]="hasError('evaluatedValue', 'required') || hasError('evaluatedValue', 'min')"
+                    />
+                    @if (hasError('evaluatedValue', 'required') || hasError('evaluatedValue', 'min')) {
+                      <small class="invalid-feedback">Enter a positive evaluated value.</small>
+                    }
+                  </label>
+
+                  <label>
+                    <span>Evaluation date</span>
+                    <input class="form-control" type="date" formControlName="evaluationDate" />
+                  </label>
+
+                  <label class="wide-field">
+                    <span>Notes</span>
+                    <textarea
+                      class="form-control"
+                      rows="4"
+                      formControlName="notes"
+                      [class.is-invalid]="hasError('notes', 'maxlength')"
+                    ></textarea>
+                    @if (hasError('notes', 'maxlength')) {
+                      <small class="invalid-feedback">Notes cannot exceed 2000 characters.</small>
+                    }
+                  </label>
+                </div>
+
+                <div class="form-actions">
+                  <button class="btn btn-primary" type="submit" [disabled]="isCompleting()">
+                    @if (isCompleting()) {
+                      Saving value...
+                    } @else {
+                      Save completed evaluation
+                    }
+                  </button>
+                  <button class="btn btn-outline-secondary" type="button" (click)="closeCompletion()" [disabled]="isCompleting()">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            }
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>
