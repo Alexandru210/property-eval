@@ -39,7 +39,7 @@ h1 {
 
 .stat-card,
 .empty-panel,
-.evaluation-row {
+.evaluation-card {
   background: #ffffff;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
@@ -100,12 +100,20 @@ h2 {
   gap: 0.75rem;
 }
 
+.evaluation-card {
+  overflow: hidden;
+}
+
 .evaluation-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(13rem, 0.32fr) minmax(0, 1fr) auto;
+  align-items: start;
   gap: 1rem;
   padding: 1.1rem 1.25rem;
+}
+
+.evaluation-main {
+  min-width: 0;
 
   h2 {
     margin-top: 0.2rem;
@@ -160,7 +168,11 @@ h2 {
   }
 
   .evaluation-row {
-    flex-direction: column;
+    display: block;
+  }
+
+  .property-media-column {
+    margin-bottom: 1rem;
   }
 
   .row-meta {
@@ -174,5 +186,9 @@ h2 {
 
   .btn {
     width: 100%;
+  }
+
+  .property-thumbnail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

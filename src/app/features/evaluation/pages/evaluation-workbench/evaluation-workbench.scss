@@ -120,9 +120,9 @@ h1 {
 }
 
 .evaluation-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(13rem, 0.32fr) minmax(0, 1fr) auto;
   align-items: start;
-  justify-content: space-between;
   gap: 1rem;
   padding: 1.1rem 1.25rem;
 }
@@ -271,6 +271,10 @@ h1 {
     display: block;
   }
 
+  .property-media-column {
+    margin-bottom: 1rem;
+  }
+
   .stats-grid,
   .completion-grid {
     grid-template-columns: 1fr;
@@ -285,5 +289,9 @@ h1 {
 
   .btn {
     width: 100%;
+  }
+
+  .property-thumbnail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

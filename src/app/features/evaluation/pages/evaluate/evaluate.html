@@ -121,6 +121,44 @@
         </label>
       </section>
 
+      <section aria-labelledby="evaluation-photos-title">
+        <h2 id="evaluation-photos-title">Photos</h2>
+        <div class="photo-uploader">
+          <label class="photo-picker">
+            <input
+              type="file"
+              multiple
+              [accept]="acceptedImageTypes"
+              (change)="onImageSelection($event)"
+            />
+            <span>Add photos</span>
+            <small>Required for evaluator review | JPG, PNG, WebP | {{ maxImageSizeLabel }} max | {{ selectedImages().length }}/{{ maxImageCount }}</small>
+          </label>
+
+          @if (photoError()) {
+            <div class="alert alert-danger photo-error" role="alert">{{ photoError() }}</div>
+          }
+
+          @if (selectedImages().length > 0) {
+            <div class="photo-grid" aria-label="Selected property photos">
+              @for (image of selectedImages(); track image.id) {
+                <figure class="photo-preview">
+                  @if (image.previewUrl) {
+                    <img [src]="image.previewUrl" [alt]="image.file.name" />
+                  } @else {
+                    <div class="photo-placeholder">{{ image.file.name }}</div>
+                  }
+                  <figcaption>
+                    <span>{{ image.file.name }}</span>
+                    <button class="btn btn-sm btn-outline-danger" type="button" (click)="removeSelectedImage(image.id)">Remove</button>
+                  </figcaption>
+                </figure>
+              }
+            </div>
+          }
+        </div>
+      </section>
+
       <section aria-labelledby="evaluation-notes-title">
         <h2 id="evaluation-notes-title">Evaluation request</h2>
         <div class="form-grid request-grid">

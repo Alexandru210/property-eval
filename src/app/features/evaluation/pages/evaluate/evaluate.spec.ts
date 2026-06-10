@@ -16,6 +16,7 @@ describe('Evaluate', () => {
   let fixture: ComponentFixture<Evaluate>;
   let propertyService: {
     createProperty: ReturnType<typeof vi.fn>;
+    uploadPropertyImages: ReturnType<typeof vi.fn>;
     getPropertyValuation: ReturnType<typeof vi.fn>;
   };
   let evaluationService: { createEvaluation: ReturnType<typeof vi.fn> };
@@ -23,6 +24,15 @@ describe('Evaluate', () => {
   beforeEach(async () => {
     propertyService = {
       createProperty: vi.fn().mockResolvedValue(createProperty(42)),
+      uploadPropertyImages: vi.fn().mockResolvedValue([
+        {
+          id: 1,
+          propertyId: 42,
+          imageUrl: '/uploads/properties/42/front.jpg',
+          description: null,
+          uploadedAt: '2026-06-02T00:00:00Z',
+        },
+      ]),
       getPropertyValuation: vi.fn().mockResolvedValue(createValuation(42)),
     };
     evaluationService = {
@@ -42,12 +52,14 @@ describe('Evaluate', () => {
     component = fixture.componentInstance;
     await fixture.whenStable();
     fillValidForm(component);
+    addSelectedImage(component);
   });
 
   it('should create a property and evaluation request', async () => {
     await component['submit']();
 
     expect(propertyService.createProperty).toHaveBeenCalledTimes(1);
+    expect(propertyService.uploadPropertyImages).toHaveBeenCalledWith(42, [expect.any(File)]);
     expect(evaluationService.createEvaluation).toHaveBeenCalledWith(
       expect.objectContaining({ propertyId: 42, notes: 'Needs review.' }),
     );
@@ -64,6 +76,7 @@ describe('Evaluate', () => {
     await component['submit']();
 
     expect(propertyService.createProperty).toHaveBeenCalledTimes(1);
+    expect(propertyService.uploadPropertyImages).toHaveBeenCalledTimes(1);
     expect(evaluationService.createEvaluation).toHaveBeenCalledTimes(2);
   });
 
@@ -77,6 +90,18 @@ describe('Evaluate', () => {
     await component['submit']();
 
     expect(propertyService.createProperty).toHaveBeenCalledTimes(2);
+    expect(propertyService.uploadPropertyImages).toHaveBeenCalledTimes(2);
+  });
+
+  it('should require photos before creating an evaluation request', async () => {
+    component['selectedImages'].set([]);
+
+    await component['submit']();
+
+    expect(propertyService.createProperty).not.toHaveBeenCalled();
+    expect(propertyService.uploadPropertyImages).not.toHaveBeenCalled();
+    expect(evaluationService.createEvaluation).not.toHaveBeenCalled();
+    expect(component['photoError']()).toContain('Add at least one property photo');
   });
 });
 
@@ -93,6 +118,18 @@ function fillValidForm(component: Evaluate): void {
     description: 'A good apartment.',
     notes: 'Needs review.',
   });
+}
+
+function addSelectedImage(component: Evaluate): void {
+  const file = new File(['photo'], 'front.jpg', { type: 'image/jpeg', lastModified: 1 });
+
+  component['selectedImages'].set([
+    {
+      id: 'front-photo',
+      file,
+      previewUrl: '',
+    },
+  ]);
 }
 
 function createProperty(id: number): PropertyRecord {

@@ -56,6 +56,44 @@
         @for (evaluation of visibleEvaluations(); track trackEvaluation($index, evaluation)) {
           <article class="evaluation-card">
             <div class="evaluation-row">
+              <div class="property-media-column">
+                @if (evaluation.property.images.length > 0) {
+                  <button
+                    class="property-media-panel property-media-button"
+                    type="button"
+                    (click)="openPhoto(evaluation, 0)"
+                    [attr.aria-label]="'Open photo for ' + evaluation.property.address.street"
+                  >
+                    @if (getPrimaryImageUrl(evaluation); as imageUrl) {
+                      <img [src]="imageUrl" [alt]="evaluation.property.address.street" />
+                    }
+                    <span>{{ evaluation.property.images.length }} photos</span>
+                  </button>
+
+                  @if (evaluation.property.images.length > 1) {
+                    <div class="property-thumbnail-grid" aria-label="Property photo gallery">
+                      @for (image of evaluation.property.images; track image.id) {
+                        <button
+                          class="property-thumbnail-button"
+                          type="button"
+                          (click)="openPhoto(evaluation, $index)"
+                          [attr.aria-label]="'Open photo ' + ($index + 1) + ' for ' + evaluation.property.address.street"
+                        >
+                          <img
+                            [src]="getImageUrl(image)"
+                            [alt]="image.description || evaluation.property.address.street + ' photo'"
+                          />
+                        </button>
+                      }
+                    </div>
+                  }
+                } @else {
+                  <div class="property-media-panel">
+                    <span>No photos</span>
+                  </div>
+                }
+              </div>
+
               <div class="evaluation-main">
                 <p class="row-kicker">{{ getPropertyType(evaluation) }} in {{ evaluation.property.address.city }}</p>
                 <h2>{{ evaluation.property.address.street }}</h2>
@@ -160,6 +198,25 @@
                   </button>
                 </div>
               </form>
+            }
+
+            @if (getSelectedPhoto(evaluation); as selectedPhoto) {
+              <div class="photo-lightbox" role="dialog" aria-modal="true" [attr.aria-label]="evaluation.property.address.street + ' photo viewer'" (click)="closePhoto()">
+                <div class="lightbox-panel" (click)="$event.stopPropagation()">
+                  <button class="lightbox-close" type="button" (click)="closePhoto()" aria-label="Close photo viewer">Close</button>
+
+                  @if (evaluation.property.images.length > 1) {
+                    <button class="lightbox-nav previous" type="button" (click)="showPreviousPhoto(evaluation)" aria-label="Previous photo">Previous</button>
+                  }
+
+                  <img [src]="getImageUrl(selectedPhoto)" [alt]="selectedPhoto.description || evaluation.property.address.street" />
+
+                  @if (evaluation.property.images.length > 1) {
+                    <button class="lightbox-nav next" type="button" (click)="showNextPhoto(evaluation)" aria-label="Next photo">Next</button>
+                    <p class="lightbox-count">{{ getSelectedPhotoNumber(evaluation) }} / {{ evaluation.property.images.length }}</p>
+                  }
+                </div>
+              </div>
             }
           </article>
         }
