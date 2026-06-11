@@ -52,9 +52,9 @@
                 <a [routerLink]="['/listings', listing.id]">{{ listing.title }}</a>
               </h2>
               <p>
-                {{ listing.property.area }} m² ·
+                {{ listing.property.area }} sqm |
                 {{ listing.property.bedrooms }} bedrooms ·
-                {{ getPricePerSquareMeter(listing) | currency: 'EUR' : 'symbol' : '1.0-0' }}/m² ·
+                {{ getPricePerSquareMeter(listing) | currency: 'EUR' : 'symbol' : '1.0-0' }}/sqm |
                 Listed {{ listing.createdAt | date: 'mediumDate' }}
               </p>
             </div>

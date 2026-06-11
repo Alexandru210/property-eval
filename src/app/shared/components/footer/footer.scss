@@ -1,7 +1,8 @@
 .footer {
   padding: 1.5rem 1rem;
   color: #d0d5dd;
-  background: #101828;
+  background:
+    linear-gradient(135deg, var(--surface-strong), #203c36);
 }
 
 .footer-shell {

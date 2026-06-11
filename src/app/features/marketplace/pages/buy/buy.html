@@ -6,10 +6,21 @@
         <h1 id="buy-title">Available Properties</h1>
         <p class="intro">Review active homes, compare core facts, and open listing profiles for a closer look.</p>
       </div>
-      <a class="btn btn-primary" routerLink="/sell">List a property</a>
+      <div class="market-actions">
+        <span class="metric-pill">Verified property facts</span>
+        <a class="btn btn-primary" routerLink="/sell">List a property</a>
+      </div>
     </header>
 
     <form class="filter-panel" [formGroup]="filterForm" (ngSubmit)="applyFilters()" aria-label="Listing filters">
+      <div class="filter-heading">
+        <div>
+          <strong>Refine search</strong>
+          <span>Find homes by city, type, budget, and minimum rooms.</span>
+        </div>
+        <button class="btn btn-outline-secondary" type="button" (click)="clearFilters()">Reset filters</button>
+      </div>
+
       <div class="filter-grid">
         <label>
           <span>City</span>
@@ -49,7 +60,6 @@
 
       <div class="filter-actions">
         <button class="btn btn-primary" type="submit">Apply filters</button>
-        <button class="btn btn-outline-secondary" type="button" (click)="clearFilters()">Clear</button>
       </div>
     </form>
 
@@ -88,6 +98,11 @@
             </a>
 
             <div class="listing-body">
+              <div class="listing-topline">
+                <strong class="price">{{ listing.askingPrice | currency: 'EUR' : 'symbol' : '1.0-0' }}</strong>
+                <span class="status-pill">{{ getListingStatus(listing.status) }}</span>
+              </div>
+
               <div class="listing-title-row">
                 <h2>
                   <a [routerLink]="['/listings', listing.id]">{{ listing.title }}</a>
@@ -98,15 +113,10 @@
                 {{ listing.property.address.city }}, {{ listing.property.address.county }}
               </p>
 
-              <div class="price-row">
-                <strong class="price">{{ listing.askingPrice | currency: 'EUR' : 'symbol' : '1.0-0' }}</strong>
-                <span class="status-pill">{{ getListingStatus(listing.status) }}</span>
-              </div>
-
               <dl class="listing-facts">
                 <div>
                   <dt>Area</dt>
-                  <dd>{{ listing.property.area }} m²</dd>
+                  <dd>{{ listing.property.area }} sqm</dd>
                 </div>
                 <div>
                   <dt>Bedrooms</dt>
@@ -117,7 +127,7 @@
                   <dd>{{ listing.property.bathrooms }}</dd>
                 </div>
                 <div>
-                  <dt>Price/m²</dt>
+                  <dt>Price/sqm</dt>
                   <dd>{{ getPricePerSquareMeter(listing) | currency: 'EUR' : 'symbol' : '1.0-0' }}</dd>
                 </div>
               </dl>

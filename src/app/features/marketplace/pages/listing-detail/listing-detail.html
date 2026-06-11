@@ -56,7 +56,7 @@
           <dl class="fact-grid">
             <div>
               <dt>Area</dt>
-              <dd>{{ listing.property.area }} m²</dd>
+              <dd>{{ listing.property.area }} sqm</dd>
             </div>
             <div>
               <dt>Bedrooms</dt>
@@ -71,7 +71,7 @@
               <dd>{{ listing.property.yearBuilt }}</dd>
             </div>
             <div>
-              <dt>Price per m²</dt>
+              <dt>Price per sqm</dt>
               <dd>{{ getPricePerSquareMeter(listing) | currency: 'EUR' : 'symbol' : '1.0-0' }}</dd>
             </div>
             <div>
@@ -79,6 +79,18 @@
               <dd>{{ listing.createdAt | date: 'mediumDate' }}</dd>
             </div>
           </dl>
+
+          <div class="value-strip" aria-label="Listing value snapshot">
+            <div>
+              <span>Asking price</span>
+              <strong>{{ listing.askingPrice | currency: 'EUR' : 'symbol' : '1.0-0' }}</strong>
+            </div>
+            <div>
+              <span>Unit price</span>
+              <strong>{{ getPricePerSquareMeter(listing) | currency: 'EUR' : 'symbol' : '1.0-0' }}/sqm</strong>
+            </div>
+            <a class="btn btn-outline-primary" routerLink="/evaluate">Request valuation</a>
+          </div>
 
           <section class="description" aria-labelledby="description-title">
             <h2 id="description-title">Description</h2>

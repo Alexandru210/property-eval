@@ -5,8 +5,8 @@
   justify-content: center;
   padding: 3rem 1rem;
   background:
-    linear-gradient(120deg, rgba(13, 110, 253, 0.08), rgba(25, 135, 84, 0.08)),
-    #f8fafc;
+    linear-gradient(120deg, rgba(20, 108, 92, 0.12), rgba(183, 121, 31, 0.1)),
+    var(--surface-muted);
 }
 
 .auth-panel {
@@ -16,9 +16,9 @@
   gap: 2rem;
   align-items: stretch;
   background: #ffffff;
-  border: 1px solid #e4e7ec;
+  border: 1px solid var(--border-subtle);
   border-radius: 0.5rem;
-  box-shadow: 0 1.5rem 4rem rgba(16, 24, 40, 0.08);
+  box-shadow: var(--shadow-md);
   overflow: hidden;
 }
 
@@ -27,7 +27,8 @@
   flex-direction: column;
   justify-content: center;
   padding: 2.5rem;
-  background: #101828;
+  background:
+    linear-gradient(135deg, var(--surface-strong), #25453d);
   color: #ffffff;
 }
 
@@ -73,8 +74,8 @@ label {
   border-color: #d0d5dd;
 
   &:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.16);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(20, 108, 92, 0.16);
   }
 }
 
@@ -100,11 +101,11 @@ label {
 
 .auth-switch {
   margin: 1.25rem 0 0;
-  color: #667085;
+  color: var(--text-muted);
   text-align: center;
 
   a {
-    color: #0d6efd;
+    color: var(--primary);
     font-weight: 700;
     text-decoration: none;
 

@@ -1,8 +1,8 @@
 .navbar-custom {
-  background-color: rgba(255, 255, 255, 0.96);
+  background-color: rgba(255, 255, 255, 0.9);
   border-bottom: 1px solid var(--border-subtle);
-  box-shadow: 0 0.25rem 1rem rgba(16, 24, 40, 0.04);
-  backdrop-filter: blur(12px);
+  box-shadow: 0 0.45rem 1.5rem rgba(23, 33, 31, 0.06);
+  backdrop-filter: blur(16px);
   position: sticky;
   top: 0;
   z-index: 1030;
@@ -15,7 +15,7 @@
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 2rem;
-  padding: 0 2rem;
+  padding: 0 2.25rem;
 }
 
 .navbar-section {
@@ -49,7 +49,7 @@
 
   &:hover,
   &:focus {
-    color: #0d6efd;
+    color: var(--primary);
   }
 }
 
@@ -61,8 +61,10 @@
   color: #ffffff;
   font-size: 0.72rem;
   letter-spacing: 0.02em;
-  background: #101828;
+  background:
+    linear-gradient(135deg, var(--surface-strong), #27443d 55%, var(--accent));
   border-radius: 0.45rem;
+  box-shadow: 0 0.5rem 1rem rgba(23, 33, 31, 0.18);
 
   &::before {
     content: "PE";
@@ -70,27 +72,29 @@
 }
 
 .navbar-link {
-  color: #475467;
+  color: #53645f;
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1;
   text-decoration: none;
   white-space: nowrap;
-  border-radius: 0.25rem;
-  padding: 0.55rem 0.2rem;
+  border-radius: 0.4rem;
+  padding: 0.55rem 0.35rem;
   transition:
+    background 0.2s ease,
     color 0.2s ease,
     box-shadow 0.2s ease;
 
   &:hover,
   &:focus,
   &.active {
-    color: #0d6efd;
+    color: var(--primary);
+    background: var(--primary-soft);
   }
 
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(20, 108, 92, 0.22);
   }
 }
 
@@ -112,7 +116,7 @@
   position: relative;
 
   &[open] .account-menu-trigger {
-    color: #0d6efd;
+    color: var(--primary);
   }
 }
 
@@ -131,13 +135,13 @@
 .account-name {
   max-width: 11rem;
   overflow: hidden;
-  color: #101828;
+  color: var(--text);
   font-weight: 600;
   text-overflow: ellipsis;
 }
 
 .account-chevron {
-  color: #667085;
+  color: var(--text-muted);
   font-size: 0.7rem;
   line-height: 1;
 }
@@ -152,14 +156,14 @@
   background: #ffffff;
   border: 1px solid var(--border-subtle);
   border-radius: 0.5rem;
-  box-shadow: 0 1rem 2rem rgba(16, 24, 40, 0.12);
+  box-shadow: 0 1rem 2rem rgba(23, 33, 31, 0.14);
 }
 
 .account-menu-item {
   width: 100%;
   min-height: 2.25rem;
   padding: 0 0.65rem;
-  color: #344054;
+  color: #33423e;
   font: inherit;
   font-weight: 500;
   text-align: left;
@@ -172,13 +176,13 @@
   &:hover,
   &:focus,
   &.active {
-    color: #0d6efd;
-    background: #f2f4f7;
+    color: var(--primary);
+    background: var(--primary-soft);
   }
 
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.18);
+    box-shadow: 0 0 0 0.2rem rgba(20, 108, 92, 0.18);
   }
 }
 
@@ -190,7 +194,7 @@
 .account-menu-divider {
   height: 1px;
   margin: 0.35rem 0;
-  background: #e4e7ec;
+  background: var(--border-subtle);
 }
 
 @media (max-width: 767.98px) {

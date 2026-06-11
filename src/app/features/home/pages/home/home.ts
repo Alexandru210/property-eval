@@ -10,31 +10,31 @@ import { RouterLink } from '@angular/router';
 export class Home {
   protected readonly workspaces = [
     {
-      metric: 'Buyer flow',
-      title: 'Find listed homes',
-      description: 'Scan active listings, compare price per square meter, and open detailed property profiles.',
+      metric: '01',
+      title: 'Compare listings',
+      description: 'Browse active properties with price, location, area, and room details ready for quick comparison.',
       route: '/buy',
       action: 'Browse listings',
     },
     {
-      metric: 'Seller flow',
-      title: 'Publish a listing',
-      description: 'Create property details and put a listing into the marketplace with a clean seller workspace.',
+      metric: '02',
+      title: 'Publish clearly',
+      description: 'Create a structured listing with property facts, photos, price, and status in one guided flow.',
       route: '/sell',
       action: 'List property',
     },
     {
-      metric: 'Valuation flow',
-      title: 'Request valuation',
-      description: 'Record property facts and submit an evaluation request for review and follow-up.',
+      metric: '03',
+      title: 'Track valuation',
+      description: 'Submit property details for review and keep valuation requests visible through their full lifecycle.',
       route: '/evaluate',
       action: 'Evaluate',
     },
   ];
 
   protected readonly stats = [
-    { label: 'Buyers', value: 'Compare' },
-    { label: 'Sellers', value: 'Publish' },
-    { label: 'Valuations', value: 'Track' },
+    { label: 'Marketplace', value: 'Live listings' },
+    { label: 'Evaluation', value: 'Price context' },
+    { label: 'Accounts', value: 'Saved history' },
   ];
 }

@@ -52,7 +52,7 @@
               <h2>
                 <a [routerLink]="['/listings', listing.id]">{{ listing.title }}</a>
               </h2>
-              <p>{{ listing.property.area }} m² · {{ listing.property.bedrooms }} bedrooms · Listed {{ listing.createdAt | date: 'mediumDate' }}</p>
+              <p>{{ listing.property.area }} sqm | {{ listing.property.bedrooms }} bedrooms | Listed {{ listing.createdAt | date: 'mediumDate' }}</p>
             </div>
             <div class="row-meta">
               <strong>{{ listing.askingPrice | currency: 'EUR' : 'symbol' : '1.0-0' }}</strong>

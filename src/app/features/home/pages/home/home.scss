@@ -1,9 +1,9 @@
 .home-page {
   min-height: calc(100vh - 12rem);
-  padding: 2rem 1rem 3rem;
+  padding: 1.5rem 1rem 3rem;
   background:
-    linear-gradient(180deg, #eef4ff 0, #f8fafc 22rem),
-    #f8fafc;
+    linear-gradient(180deg, rgba(20, 108, 92, 0.12) 0, rgba(244, 247, 245, 0) 24rem),
+    var(--surface-muted);
 }
 
 .home-shell {
@@ -12,37 +12,45 @@
 }
 
 .hero-panel {
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(20rem, 1.05fr);
-  gap: 1.25rem;
-  align-items: stretch;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background: #ffffff;
+  position: relative;
+  min-height: min(38rem, calc(100vh - 8rem));
+  display: flex;
+  align-items: end;
+  margin-bottom: 1.25rem;
+  padding: clamp(1.25rem, 4vw, 3rem);
+  overflow: hidden;
+  color: #ffffff;
+  background: #17211f;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   box-shadow: var(--shadow-md);
 }
 
 .hero-copy {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 1.25rem;
+  align-items: start;
+  max-width: 44rem;
+
+  .page-kicker {
+    color: #f7dca5;
+  }
 }
 
 h1 {
-  max-width: 44rem;
   margin: 0.5rem 0 0;
-  color: #101828;
-  font-size: 2.7rem;
-  line-height: 1.08;
+  color: #ffffff;
+  font-size: clamp(3rem, 9vw, 6.25rem);
+  line-height: 0.95;
 }
 
 .intro {
-  margin: 0.85rem 0 0;
-  color: #667085;
-  font-size: 1.05rem;
+  max-width: 38rem;
+  margin: 1rem 0 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 1.1rem;
   line-height: 1.6;
 }
 
@@ -50,19 +58,83 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  margin-top: 1.5rem;
+  margin-top: 1.75rem;
+
+  .btn-outline-primary {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.7);
+
+    &:hover,
+    &:focus {
+      color: var(--text);
+      background: #ffffff;
+    }
+  }
 }
 
 .hero-media {
-  min-height: 22rem;
-  overflow: hidden;
-  background: #dbe6f5;
-  border-radius: 0.45rem;
+  position: absolute;
+  inset: 0;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  &::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background:
+      linear-gradient(90deg, rgba(23, 33, 31, 0.88), rgba(23, 33, 31, 0.42) 52%, rgba(23, 33, 31, 0.12)),
+      linear-gradient(180deg, rgba(23, 33, 31, 0.12), rgba(23, 33, 31, 0.58));
+  }
+}
+
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  width: min(100%, 38rem);
+  margin: 2rem 0 0;
+
+  div {
+    padding: 0.75rem 0.8rem;
+    background: rgba(255, 255, 255, 0.13);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: var(--radius);
+    backdrop-filter: blur(12px);
+  }
+
+  dt {
+    color: #f7dca5;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: 0.2rem 0 0;
+    color: #ffffff;
+    font-weight: 800;
+  }
+}
+
+.workflow-section {
+  margin-top: 1.5rem;
+}
+
+.section-heading {
+  max-width: 42rem;
+  margin-bottom: 1rem;
+
+  h2 {
+    margin: 0.35rem 0 0;
+    color: var(--text);
+    font-size: 2rem;
+    line-height: 1.15;
   }
 }
 
@@ -88,22 +160,27 @@ h1 {
   padding: 1.25rem;
 
   span {
-    color: var(--primary);
+    display: inline-grid;
+    width: 2.35rem;
+    height: 2.35rem;
+    place-items: center;
+    color: #ffffff;
     font-size: 0.78rem;
     font-weight: 800;
-    text-transform: uppercase;
+    background: var(--surface-strong);
+    border-radius: 50%;
   }
 
-  h2 {
-    margin: 0.65rem 0 0;
-    color: #101828;
+  h3 {
+    margin: 1rem 0 0;
+    color: var(--text);
     font-size: 1.25rem;
   }
 
   p {
     flex: 1;
     margin: 0.75rem 0 1.25rem;
-    color: #667085;
+    color: var(--text-muted);
     line-height: 1.6;
   }
 }
@@ -136,23 +213,19 @@ h1 {
   }
 
   dt {
-    color: #667085;
+    color: var(--text-muted);
     font-size: 0.85rem;
   }
 
   dd {
     margin: 0.2rem 0 0;
-    color: #101828;
+    color: var(--text);
     font-size: 1.4rem;
     font-weight: 800;
   }
 }
 
 @media (max-width: 991.98px) {
-  .hero-panel {
-    grid-template-columns: 1fr;
-  }
-
   .workspace-grid,
   .status-panel {
     grid-template-columns: 1fr;
@@ -169,15 +242,19 @@ h1 {
     padding: 1.5rem 1rem;
   }
 
-  h1 {
-    font-size: 2rem;
-  }
-
   .hero-actions .btn {
     width: 100%;
   }
 
-  .hero-media {
-    min-height: 14rem;
+  .hero-panel {
+    min-height: 34rem;
+  }
+
+  .hero-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading h2 {
+    font-size: 1.55rem;
   }
 }

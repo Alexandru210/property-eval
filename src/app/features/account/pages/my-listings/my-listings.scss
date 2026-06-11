@@ -1,7 +1,7 @@
 .account-page {
   min-height: calc(100vh - 12rem);
   padding: 2rem 1rem 3rem;
-  background: #f8fafc;
+  background: var(--surface-raised);
 }
 
 .account-shell {
@@ -19,14 +19,14 @@
 
 h1 {
   margin: 0.25rem 0 0;
-  color: #101828;
+  color: var(--text);
   font-size: 2.25rem;
   line-height: 1.1;
 }
 
 .intro {
   margin: 0.75rem 0 0;
-  color: #667085;
+  color: var(--text-muted);
   line-height: 1.6;
 }
 
@@ -50,14 +50,14 @@ h1 {
 
   span {
     display: block;
-    color: #667085;
+    color: var(--text-muted);
     font-size: 0.9rem;
   }
 
   strong {
     display: block;
     margin-top: 0.5rem;
-    color: #101828;
+    color: var(--text);
     font-size: 2rem;
     line-height: 1;
   }
@@ -80,7 +80,7 @@ h1 {
   height: 2.75rem;
   display: grid;
   place-items: center;
-  color: #0d6efd;
+  color: var(--primary);
   font-size: 1.15rem;
   font-weight: 700;
   background: #eff6ff;
@@ -89,13 +89,13 @@ h1 {
 
 h2 {
   margin: 0;
-  color: #101828;
+  color: var(--text);
   font-size: 1.15rem;
 }
 
 .empty-panel p {
   margin: 0.35rem 0 0;
-  color: #667085;
+  color: var(--text-muted);
 }
 
 .listings-list {
@@ -119,23 +119,23 @@ h2 {
   }
 
   h2 a {
-    color: #101828;
+    color: var(--text);
     text-decoration: none;
 
     &:hover,
     &:focus {
-      color: #0d6efd;
+      color: var(--primary);
     }
   }
 
   p {
     margin: 0.35rem 0 0;
-    color: #667085;
+    color: var(--text-muted);
   }
 }
 
 .row-kicker {
-  color: #0d6efd !important;
+  color: var(--primary) !important;
   font-size: 0.8rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -147,7 +147,7 @@ h2 {
   gap: 0.35rem;
 
   strong {
-    color: #101828;
+    color: var(--text);
     font-size: 1.2rem;
     white-space: nowrap;
   }
