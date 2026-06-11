@@ -158,6 +158,11 @@ export interface CreateEvaluationRequest {
   notes?: string | null;
 }
 
+export interface AssignEvaluationRequest {
+  id: number;
+  evaluatorUserId: number;
+}
+
 export interface CompleteEvaluationRequest {
   id: number;
   evaluatedValue: number;

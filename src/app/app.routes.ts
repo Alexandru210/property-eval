@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './core/admin.guard';
 import { authGuard } from './core/auth.guard';
 import { staffGuard } from './core/staff.guard';
 
@@ -9,6 +10,7 @@ export const routes: Routes = [
     { path: 'sell', loadComponent: () => import('./features/marketplace/pages/sell/sell').then((m) => m.Sell), canActivate: [authGuard] },
     { path: 'evaluate', loadComponent: () => import('./features/evaluation/pages/evaluate/evaluate').then((m) => m.Evaluate), canActivate: [authGuard] },
     { path: 'evaluation-workbench', loadComponent: () => import('./features/evaluation/pages/evaluation-workbench/evaluation-workbench').then((m) => m.EvaluationWorkbench), canActivate: [authGuard, staffGuard] },
+    { path: 'admin', loadComponent: () => import('./features/admin/pages/admin-dashboard/admin-dashboard').then((m) => m.AdminDashboard), canActivate: [authGuard, adminGuard] },
     { path: 'login', loadComponent: () => import('./features/auth/pages/login/login').then((m) => m.Login) },
     { path: 'register', loadComponent: () => import('./features/auth/pages/register/register').then((m) => m.Register) },
     { path: 'my-listings', loadComponent: () => import('./features/account/pages/my-listings/my-listings').then((m) => m.MyListings), canActivate: [authGuard] },

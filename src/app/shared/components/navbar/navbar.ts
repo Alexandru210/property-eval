@@ -15,6 +15,7 @@ export class Navbar {
 
   protected readonly currentUser = this.authService.currentUser;
   protected readonly isAuthenticated = this.authService.isAuthenticated;
+  protected readonly isAdmin = this.authService.isAdmin;
   protected readonly isStaff = this.authService.isStaff;
 
   closeMenu(): void {

@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
+  AssignEvaluationRequest,
   CompleteEvaluationRequest,
   CreateEvaluationRequest,
   EvaluationFilters,
@@ -26,6 +27,12 @@ export class EvaluationService {
 
   createEvaluation(request: CreateEvaluationRequest): Promise<PropertyEvaluation> {
     return firstValueFrom(this.http.post<PropertyEvaluation>(`${this.apiUrl}/evaluations`, request));
+  }
+
+  assignEvaluation(request: AssignEvaluationRequest): Promise<PropertyEvaluation> {
+    return firstValueFrom(
+      this.http.post<PropertyEvaluation>(`${this.apiUrl}/evaluations/${request.id}/assign`, request)
+    );
   }
 
   completeEvaluation(request: CompleteEvaluationRequest): Promise<PropertyEvaluation> {

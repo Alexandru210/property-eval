@@ -41,6 +41,11 @@
                 Evaluation Workbench
               </a>
             }
+            @if (isAdmin()) {
+              <a class="account-menu-item account-menu-link" routerLink="/admin" routerLinkActive="active" (click)="accountMenu.open = false; closeMenu()">
+                Admin Dashboard
+              </a>
+            }
             <div class="account-menu-divider" role="separator" aria-hidden="true"></div>
             <button class="account-menu-item" type="button" (click)="logout()">
               Logout
