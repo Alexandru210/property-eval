@@ -13,6 +13,7 @@ describe('Navbar', () => {
   let authService: {
     currentUser: ReturnType<typeof signal<User | null>>;
     isAuthenticated: ReturnType<typeof computed>;
+    isAdmin: ReturnType<typeof computed>;
     isStaff: ReturnType<typeof computed>;
     logout: ReturnType<typeof vi.fn>;
   };
@@ -22,6 +23,7 @@ describe('Navbar', () => {
     authService = {
       currentUser,
       isAuthenticated: computed(() => currentUser() !== null),
+      isAdmin: computed(() => currentUser()?.role === 'admin'),
       isStaff: computed(() => {
         const role = currentUser()?.role;
 
