@@ -80,14 +80,9 @@
             </div>
           </dl>
 
-          <div class="value-strip" aria-label="Listing value snapshot">
+          <div class="value-strip" aria-label="Request a valuation">
             <div>
-              <span>Asking price</span>
-              <strong>{{ listing.askingPrice | currency: 'EUR' : 'symbol' : '1.0-0' }}</strong>
-            </div>
-            <div>
-              <span>Unit price</span>
-              <strong>{{ getPricePerSquareMeter(listing) | currency: 'EUR' : 'symbol' : '1.0-0' }}/sqm</strong>
+              <strong>Get an independent estimate</strong>
             </div>
             <a class="btn btn-outline-primary" routerLink="/evaluate">Request valuation</a>
           </div>
